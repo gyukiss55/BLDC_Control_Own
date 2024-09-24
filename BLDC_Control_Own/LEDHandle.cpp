@@ -46,11 +46,14 @@ void loopSerial() {
             period = str1.toInt();
             pulse = str2.toInt();
             if (period > 0 && pulse >=0) {
+                pulse = (period * pulse) / 100;
+                
                 Serial.print("Period:");
                 Serial.print(period);
                 Serial.print(", Pulse:");
                 Serial.println(pulse);
-                SetNextPeriodPulse(period, (period * 100) / pulse);
+
+                SetNextPeriodPulse(period,  pulse);
             } else {
                 Serial.print("Error:");
                 Serial.print(str1);

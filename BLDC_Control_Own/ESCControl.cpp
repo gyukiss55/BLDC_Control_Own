@@ -66,17 +66,40 @@ void TogglePort (int port, bool& state)
 	state = !state;
 }
 
+void DumpPhase ()
+{
+    Serial.print (millis ());
+    Serial.print ("-t1:");
+    Serial.print (periodMS);
+    Serial.print (",t2:");
+    Serial.print (pulseMS);
+    Serial.print (",A+");
+    Serial.print (digitalRead(EscAPPin));
+    Serial.print (",A-");
+    Serial.print (digitalRead(EscAMPin));
+    Serial.print (",B+");
+    Serial.print (digitalRead(EscBPPin));
+    Serial.print (",B-");
+    Serial.print (digitalRead(EscBMPin));
+    Serial.print (",C+");
+    Serial.print (digitalRead(EscCPPin));
+    Serial.print (",C-");
+    Serial.println (digitalRead(EscCMPin));
+
+}
+
 void loopESCControl()
 {
-	if (pulseMS > 0 && pulseMS < periodMS && periodTimer.TestAndSet()) {
+	if (pulseMS > 0 && pulseMS < periodMS && pulseTimer.TestAndSet()) {
 		ClearAllEscPin();
-		periodTimer.Stop();
+		pulseTimer.Stop();
+    DumpPhase ();
 	}
 	if (periodTimer.TestAndSet()) {
 		phaseAll++;
 		if (phaseAll >= phaseMax) {
 			phaseAll = 0;
-			if (periodMS != periodMSNext &&
+			if (periodMS != periodMSNext ||
 				pulseMS != pulseMSNext) {
 
 				periodMS = periodMSNext;
@@ -88,6 +111,8 @@ void loopESCControl()
 		if (pulseMS > 0 && pulseMS < periodMS) {
 			pulseTimer.Restart(pulseMS);
 		}
+
+    
 
 		switch (phaseAll) {
 		case 0:
@@ -133,6 +158,7 @@ void loopESCControl()
 			}
 			break;
 		}
+    DumpPhase ();
 	}
 }
 
