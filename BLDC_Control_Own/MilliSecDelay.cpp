@@ -6,7 +6,7 @@
 bool MilliSecDelay::TestAndSet(bool addDelta)
 {
 	uint32_t ts = millis();
-	if (ts - lastTS > delayMS) {
+	if (run && (ts - lastTS) > delayMS) {
 		if (addDelta)
 			lastTS = lastTS + delayMS;
 		else
@@ -20,4 +20,5 @@ void MilliSecDelay::Restart(uint32_t ms)
 {
 	delayMS = ms;
 	lastTS = millis ();
+	run = true;
 }
