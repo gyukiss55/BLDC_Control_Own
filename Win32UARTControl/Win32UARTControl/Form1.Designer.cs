@@ -2,6 +2,7 @@
 using System.IO.Ports;
 using System.Diagnostics;
 using System.Windows.Forms;
+using System.ComponentModel.Design;
 
 namespace Win32UARTControl
 {
@@ -86,14 +87,13 @@ namespace Win32UARTControl
             // 
             // PeriodBar
             // 
-            this.PeriodBar.LargeChange = 50;
             this.PeriodBar.Location = new System.Drawing.Point(96, 94);
-            this.PeriodBar.Maximum = 1000;
-            this.PeriodBar.Minimum = 50;
+            this.PeriodBar.Maximum = 100;
+            this.PeriodBar.Minimum = 1;
             this.PeriodBar.Name = "PeriodBar";
             this.PeriodBar.Size = new System.Drawing.Size(437, 45);
             this.PeriodBar.TabIndex = 4;
-            this.PeriodBar.Value = 1000;
+            this.PeriodBar.Value = 20;
             // 
             // PulseBar
             // 
@@ -111,7 +111,7 @@ namespace Win32UARTControl
             this.PeriodTimeText.Name = "PeriodTimeText";
             this.PeriodTimeText.Size = new System.Drawing.Size(100, 20);
             this.PeriodTimeText.TabIndex = 5;
-            this.PeriodTimeText.Text = "1000";
+            this.PeriodTimeText.Text = "20";
             // 
             // PulseTimeText
             // 
@@ -280,7 +280,7 @@ namespace Win32UARTControl
 
         private bool serialPortOpen = false ;
 
-        private const int PeriodBarDefaultValue = 1000;
+        private const int PeriodBarDefaultValue = 20;
         private const int PulseBarDefaultValue = 0;
 
         private void HandleSubcomponenets ()
@@ -348,6 +348,7 @@ namespace Win32UARTControl
         {
             PeriodBar.Value = PeriodBarDefaultValue;
             PulseBar.Value = PulseBarDefaultValue;
+            SendCommand();
         }
 
         private void SaveButton_Click(object sender, EventArgs e)
@@ -379,7 +380,10 @@ namespace Win32UARTControl
         bool OpenSerialPort ()
         {
             if (serialPortOpen)
-                return true;
+            {
+                serialPort1.Close();
+                serialPortOpen = false;
+            }
 
             serialPort1.PortName = UARTNameText.Text;
             serialPort1.BaudRate = 115200;
