@@ -4,16 +4,21 @@
 
 #include "LEDHandle.h"
 #include "ESCControl.h"
+#include "SeriaInput.h"
+#include "ADCData.h"
 
-void setup() {
-    Serial.begin (115200);
-    delay (2000);
+void setup()
+{
+    setupSerial();
     setupLEDHandle ();
     setupESCControl ();
+    setupADC();
 }
 
-void loop() {
-    
+void loop()
+{
+    loopSerial();
     loopLEDHandle ();
-    loopESCControl ();
+    //loopESCControl ();
+    loopADC();
 }

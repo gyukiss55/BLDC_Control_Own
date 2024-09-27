@@ -191,7 +191,7 @@ namespace Win32UARTControl
             // 
             // timer1
             // 
-            this.timer1.Interval = 1000;
+            this.timer1.Interval = 100;
             // 
             // UARTStatusCheckBox
             // 
@@ -335,7 +335,7 @@ namespace Win32UARTControl
         {
             if (serialPortOpen)
             {
-                string str = PeriodTimeText.Text + "," + PulseTimeText.Text;
+                string str = "PPN:" + PeriodTimeText.Text + "," + PulseTimeText.Text + ",4";
                 serialPort1.WriteLine(str);
             }
         }
@@ -395,6 +395,8 @@ namespace Win32UARTControl
             {
                 serialPort1.Open();
                 serialPortOpen = true;
+
+                timer1.Interval = 100;
                 timer1.Enabled = true;
                 UARTStatusCheckBox.Checked = true;
                 return true;

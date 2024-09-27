@@ -26,8 +26,12 @@ int pulseMS = 0;
 int periodMSNext = 1000;
 int pulseMSNext = 0;
 
-MilliSecDelay periodTimer;
-MilliSecDelay pulseTimer;
+//int periodUS = 20000;
+//int pulseUS = 2000;
+//int numPulse = 4;
+
+MilliSecDelay periodTimerMS;
+MilliSecDelay pulseTimerMS;
 
 void ClearAllEscPin();
 
@@ -42,9 +46,9 @@ void setupESCControl()
 
 	ClearAllEscPin();
 
-	periodTimer.Restart(periodMS);
+	periodTimerMS.Restart(periodMS);
 	if (pulseMS > 0 && pulseMS < periodMS)
-		pulseTimer.Restart(pulseMS);
+		pulseTimerMS.Restart(pulseMS);
 }
 
 void ClearAllEscPin()
@@ -55,6 +59,42 @@ void ClearAllEscPin()
 	digitalWrite(EscAMPin, LOW);
 	digitalWrite(EscBMPin, LOW);
 	digitalWrite(EscCMPin, LOW);
+}
+
+void SetEscPinAB()
+{
+	digitalWrite(EscAPPin, HIGH);
+	digitalWrite(EscBMPin, HIGH);
+}
+
+void SetEscPinAC()
+{
+	digitalWrite(EscAPPin, HIGH);
+	digitalWrite(EscCMPin, HIGH);
+}
+
+void SetEscPinBC()
+{
+	digitalWrite(EscBPPin, HIGH);
+	digitalWrite(EscCMPin, HIGH);
+}
+
+void SetEscPinBA()
+{
+	digitalWrite(EscBPPin, HIGH);
+	digitalWrite(EscAMPin, HIGH);
+}
+
+void SetEscPinCA()
+{
+	digitalWrite(EscCPPin, HIGH);
+	digitalWrite(EscAMPin, HIGH);
+}
+
+void SetEscPinCB()
+{
+	digitalWrite(EscCPPin, HIGH);
+	digitalWrite(EscBMPin, HIGH);
 }
 
 void TogglePort (int port, bool& state)
@@ -90,12 +130,12 @@ void DumpPhase ()
 
 void loopESCControl()
 {
-	if (pulseMS > 0 && pulseMS < periodMS && pulseTimer.TestAndSet()) {
+	if (pulseMS > 0 && pulseMS < periodMS && pulseTimerMS.TestAndSet()) {
 		ClearAllEscPin();
-		pulseTimer.Stop();
-    DumpPhase ();
+		pulseTimerMS.Stop();
+		DumpPhase ();
 	}
-	if (periodTimer.TestAndSet()) {
+	if (periodTimerMS.TestAndSet()) {
 		phaseAll++;
 		if (phaseAll >= phaseMax) {
 			phaseAll = 0;
@@ -104,12 +144,12 @@ void loopESCControl()
 
 				periodMS = periodMSNext;
 				pulseMS = pulseMSNext;
-				periodTimer.Restart(periodMS);
+				periodTimerMS.Restart(periodMS);
 			}
 		}
 
 		if (pulseMS > 0 && pulseMS < periodMS) {
-			pulseTimer.Restart(pulseMS);
+			pulseTimerMS.Restart(pulseMS);
 		}
 
     
@@ -117,48 +157,36 @@ void loopESCControl()
 		switch (phaseAll) {
 		case 0:
 			ClearAllEscPin();
-			if (pulseMS > 0) {
-				digitalWrite(EscAPPin, HIGH);
-				digitalWrite(EscBMPin, HIGH);
-			}
+			if (pulseMS > 0) 
+				SetEscPinAB();
 			break;
 		case 1:
 			ClearAllEscPin();
-			if (pulseMS > 0) {
-				digitalWrite(EscAPPin, HIGH);
-				digitalWrite(EscCMPin, HIGH);
-			}
+			if (pulseMS > 0)
+				SetEscPinAC();
 			break;
 		case 2:
 			ClearAllEscPin();
-			if (pulseMS > 0) {
-				digitalWrite(EscBPPin, HIGH);
-				digitalWrite(EscCMPin, HIGH);
-			}
+			if (pulseMS > 0) 
+				SetEscPinBC();
 			break;
 		case 3:
 			ClearAllEscPin();
-			if (pulseMS > 0) {
-				digitalWrite(EscBPPin, HIGH);
-				digitalWrite(EscAMPin, HIGH);
-			}
+			if (pulseMS > 0) 
+				SetEscPinBA();
 			break;
 		case 4:
 			ClearAllEscPin();
-			if (pulseMS > 0) {
-				digitalWrite(EscCPPin, HIGH);
-				digitalWrite(EscAMPin, HIGH);
-			}
+			if (pulseMS > 0) 
+				SetEscPinCA();
 			break;
 		case 5:
 			ClearAllEscPin();
-			if (pulseMS > 0) {
-				digitalWrite(EscCPPin, HIGH);
-				digitalWrite(EscBMPin, HIGH);
-			}
+			if (pulseMS > 0) 
+				SetEscPinCB();
 			break;
 		}
-    DumpPhase ();
+		DumpPhase ();
 	}
 }
 
@@ -167,3 +195,4 @@ void SetNextPeriodPulse(int period, int pulse)
 	periodMSNext = period;
 	pulseMSNext = pulse;
 }
+
