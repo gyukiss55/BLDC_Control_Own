@@ -6,7 +6,7 @@
 #include "MilliSecDelay.h"
 #include "ESCControl.h"
 
-#define ADCDataSIZE 2000
+#define ADCDataSIZE 10000
 ADCData adcDataArray[ADCDataSIZE];
 uint32_t adcDataIndex = 0;
 
@@ -139,12 +139,40 @@ void printDeltaUS()
 	lastTs = cTs;
 }
 
+void ExexcuteInOne()
+{
+	for (int ip = 0; ip < numPulse; ip++) {
+		periodTimerUS.Restart(periodUS);
+		pulseTimerUS.Restart(pulseUS);
+		while (!pulseTimerUS.TestAndSet()) {
+
+		}
+		pulseTimerUS.Stop();
+		for (sampleNr = 0; sampleNr < samplePerPeriod; sampleNr++) {
+			if (sampleNr < samplePerPeriod && adcDataIndex < ADCDataSIZE - 2) {
+				ADCSample();
+			}
+		}
+		while (!periodTimerUS.TestAndSet()) {
+
+		}
+	}
+
+	pulseTimerUS.Stop();
+
+	DumpResult();
+
+	status = Idle;
+}
+
+
 void loopADC()
 {
 	switch (status) {
 	case Idle:
 		break;
 	case StartPulseBegin:
+		ExexcuteInOne();
 		periodTimerUS.Restart(periodUS);
 		pulseTimerUS.Restart(pulseUS);
 		status = StartPulseEnd;
