@@ -6,16 +6,13 @@
 #include "MilliSecDelay.h"
 #include "ESCControl.h"
 
-#define ADCDataSIZE 10000
-ADCData adcDataArray[ADCDataSIZE];
-uint32_t adcDataIndex = 0;
-
 #if defined(STM32F1xx)
 
 #define ADCA PA1
 #define ADCB PA2
 #define ADCC PA3
 #define ADCD PA4
+#define ADCDataSIZE 600
 
 #elif defined(STM32F4xx)
 
@@ -23,6 +20,8 @@ uint32_t adcDataIndex = 0;
 #define ADCB PA1
 #define ADCC PA2
 #define ADCD PA3
+//#define ADCDataSIZE 10000
+#define ADCDataSIZE 2000
 
 #else
 assert defined !!!!RASPI not defined
@@ -30,6 +29,10 @@ assert defined !!!!RASPI not defined
 #endif
 
 #define _DEBUG_ADCLOOP_
+
+ADCData adcDataArray[ADCDataSIZE];
+uint32_t adcDataIndex = 0;
+
 
 enum ADCStatusEnum {
 	Idle = 0,
@@ -40,12 +43,13 @@ enum ADCStatusEnum {
 	NoMore
 };
 
+int samplePerPeriod = 20;
+
 int periodUS = 20000;
 int pulseUS = 2000;
 int numPulse = 4;
 int numPulseCurrent = 0;
 int sampleNr = 0;
-const int samplePerPeriod = 200;
 ADCStatusEnum status = Idle;
 
 MicroSecDelay periodTimerUS;
@@ -53,7 +57,7 @@ MicroSecDelay pulseTimerUS;
 
 
 
-uint32_t ADCSample()
+inline uint32_t ADCSample()
 {
 	adcDataArray[adcDataIndex].ts = micros();
 	adcDataArray[adcDataIndex].analA = analogRead(ADCA);
@@ -91,6 +95,28 @@ void DumpResult()
 		Serial.print(adcDataArray[i].analC); Serial.print(", ");
 		Serial.println(adcDataArray[i].analD);
 	}
+}
+
+void DumpSum()
+{
+	Serial.print("index:"); Serial.println(adcDataIndex);
+	uint32_t ts = 0;
+
+	uint32_t sumA = 0;
+	uint32_t sumB = 0;
+	uint32_t sumC = 0;
+	uint32_t sumD = 0;
+	for (int i = 0; i < adcDataIndex; ++i) {
+		sumA += adcDataArray[i].analA;
+		sumB += adcDataArray[i].analB;
+		sumC += adcDataArray[i].analC;
+		sumD += adcDataArray[i].analD;
+	}
+	Serial.print("Sum: ");
+	Serial.print(sumA); Serial.print(", ");
+	Serial.print(sumB); Serial.print(", ");
+	Serial.print(sumC); Serial.print(", ");
+	Serial.println(sumD);
 }
 
 void WritePulseBegin()
@@ -139,14 +165,17 @@ void printDeltaUS()
 	lastTs = cTs;
 }
 
-void ExexcuteInOne()
+bool ExexcuteInOne()
 {
+	numPulseCurrent = 0;
 	for (int ip = 0; ip < numPulse; ip++) {
 		periodTimerUS.Restart(periodUS);
 		pulseTimerUS.Restart(pulseUS);
+		WritePulseBegin();
 		while (!pulseTimerUS.TestAndSet()) {
 
 		}
+		WritePulseEnd();
 		pulseTimerUS.Stop();
 		for (sampleNr = 0; sampleNr < samplePerPeriod; sampleNr++) {
 			if (sampleNr < samplePerPeriod && adcDataIndex < ADCDataSIZE - 2) {
@@ -156,13 +185,16 @@ void ExexcuteInOne()
 		while (!periodTimerUS.TestAndSet()) {
 
 		}
+		numPulseCurrent++;
 	}
 
 	pulseTimerUS.Stop();
 
-	DumpResult();
+	//DumpResult();
+	DumpSum();
 
 	status = Idle;
+	return true;
 }
 
 
@@ -172,7 +204,8 @@ void loopADC()
 	case Idle:
 		break;
 	case StartPulseBegin:
-		ExexcuteInOne();
+		if (ExexcuteInOne())
+			return;
 		periodTimerUS.Restart(periodUS);
 		pulseTimerUS.Restart(pulseUS);
 		status = StartPulseEnd;
@@ -226,7 +259,8 @@ void loopADC()
 				periodTimerUS.Stop();
 				pulseTimerUS.Stop();
 
-				DumpResult();
+				//DumpResult();
+				DumpSum();
 
 				status = Idle;
 			}
@@ -249,11 +283,12 @@ void loopADC()
 	}
 }
 
-void SetPeriodPulseNumber(int period, int pulse, int number)
+void SetPeriodPulseCycleSample(int period, int pulse, int number, int sample)
 {
 	periodUS = period;
 	pulseUS = pulse;
 	numPulse = number;
+	samplePerPeriod = sample;
 	status = StartPulseBegin;
 	adcDataIndex = 0;
 	numPulseCurrent = 0;

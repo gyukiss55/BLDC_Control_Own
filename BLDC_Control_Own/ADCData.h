@@ -12,4 +12,4 @@ struct ADCData {
 
 void setupADC();
 void loopADC();
-void SetPeriodPulseNumber(int period, int pulse, int number);
+void SetPeriodPulseCycleSample(int period, int pulse, int number, int sample);

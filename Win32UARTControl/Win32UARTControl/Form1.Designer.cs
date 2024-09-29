@@ -59,6 +59,8 @@ namespace Win32UARTControl
             this.label2 = new System.Windows.Forms.Label();
             this.CycleNumberText = new System.Windows.Forms.TextBox();
             this.cyles = new System.Windows.Forms.Label();
+            this.SampleNrLabel = new System.Windows.Forms.Label();
+            this.SampleNrText = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.PeriodBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.PulseBar)).BeginInit();
             this.SuspendLayout();
@@ -91,19 +93,21 @@ namespace Win32UARTControl
             // 
             // PeriodBar
             // 
+            this.PeriodBar.LargeChange = 1000;
             this.PeriodBar.Location = new System.Drawing.Point(20, 70);
-            this.PeriodBar.Maximum = 20;
-            this.PeriodBar.Minimum = 1;
+            this.PeriodBar.Maximum = 20000;
+            this.PeriodBar.Minimum = 1000;
             this.PeriodBar.Name = "PeriodBar";
             this.PeriodBar.Size = new System.Drawing.Size(437, 45);
+            this.PeriodBar.SmallChange = 10;
             this.PeriodBar.TabIndex = 4;
-            this.PeriodBar.Value = 20;
+            this.PeriodBar.Value = 1000;
             // 
             // PulseBar
             // 
-            this.PulseBar.LargeChange = 10;
+            this.PulseBar.LargeChange = 50;
             this.PulseBar.Location = new System.Drawing.Point(20, 104);
-            this.PulseBar.Maximum = 100;
+            this.PulseBar.Maximum = 1000;
             this.PulseBar.Name = "PulseBar";
             this.PulseBar.Size = new System.Drawing.Size(437, 45);
             this.PulseBar.TabIndex = 5;
@@ -115,7 +119,7 @@ namespace Win32UARTControl
             this.PeriodTimeText.Name = "PeriodTimeText";
             this.PeriodTimeText.Size = new System.Drawing.Size(100, 20);
             this.PeriodTimeText.TabIndex = 5;
-            this.PeriodTimeText.Text = "20";
+            this.PeriodTimeText.Text = "10000";
             // 
             // PulseTimeText
             // 
@@ -210,18 +214,18 @@ namespace Win32UARTControl
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(591, 78);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(43, 13);
+            this.label1.Size = new System.Drawing.Size(52, 13);
             this.label1.TabIndex = 108;
-            this.label1.Text = "milli sec";
+            this.label1.Text = "micro sec";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(588, 109);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(15, 13);
+            this.label2.Size = new System.Drawing.Size(52, 13);
             this.label2.TabIndex = 109;
-            this.label2.Text = "%";
+            this.label2.Text = "micro sec";
             // 
             // CycleNumberText
             // 
@@ -240,11 +244,32 @@ namespace Win32UARTControl
             this.cyles.TabIndex = 111;
             this.cyles.Text = "cyles";
             // 
+            // SampleNrLabel
+            // 
+            this.SampleNrLabel.AutoSize = true;
+            this.SampleNrLabel.Location = new System.Drawing.Point(150, 139);
+            this.SampleNrLabel.Name = "SampleNrLabel";
+            this.SampleNrLabel.Size = new System.Drawing.Size(52, 13);
+            this.SampleNrLabel.TabIndex = 113;
+            this.SampleNrLabel.Text = "sample nr";
+            this.SampleNrLabel.Click += new System.EventHandler(this.label3_Click);
+            // 
+            // SampleNrText
+            // 
+            this.SampleNrText.Location = new System.Drawing.Point(32, 136);
+            this.SampleNrText.Name = "SampleNrText";
+            this.SampleNrText.Size = new System.Drawing.Size(100, 20);
+            this.SampleNrText.TabIndex = 112;
+            this.SampleNrText.Text = "50";
+            this.SampleNrText.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(659, 373);
+            this.Controls.Add(this.SampleNrLabel);
+            this.Controls.Add(this.SampleNrText);
             this.Controls.Add(this.cyles);
             this.Controls.Add(this.CycleNumberText);
             this.Controls.Add(this.label2);
@@ -333,8 +358,8 @@ namespace Win32UARTControl
                     {
                         while (serialPort1.BytesToRead > 0)
                         {
-                            string log1 = serialPort1.ReadLine();
-                            writer.WriteLine(log1);
+                            string log1 = serialPort1.ReadExisting();
+                            writer.Write(log1);
                             AddLog(log1);
                         }
                     }
@@ -370,11 +395,10 @@ namespace Win32UARTControl
                 try
                 {
                     int period = Convert.ToInt32(PeriodTimeText.Text);
-                    int percent = Convert.ToInt32(PulseTimeText.Text);
+                    int pulse = Convert.ToInt32(PulseTimeText.Text);
                     int cycle = Convert.ToInt32(CycleNumberText.Text);
-                    int pulse = percent * 10 * period;
-                    period = period * 1000;
-                    string command = "PPN:" + period.ToString() + "," + pulse.ToString() + "," + cycle.ToString();
+                    int sample = Convert.ToInt32(SampleNrText.Text);
+                    string command = "PPCS:" + period.ToString() + "," + pulse.ToString() + "," + cycle.ToString() + "," + sample.ToString();
                     Debug.WriteLine($"Command:{command}");
 
                     serialPort1.WriteLine(command);
@@ -463,6 +487,8 @@ namespace Win32UARTControl
         private System.Windows.Forms.Label label2;
         private TextBox CycleNumberText;
         private Label cyles;
+        private Label SampleNrLabel;
+        private TextBox SampleNrText;
     }
 
 }
