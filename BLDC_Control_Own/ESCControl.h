@@ -4,6 +4,7 @@ void setupESCControl();
 void loopESCControl();
 
 void SetNextPeriodPulse(int period, int pulse);
+void ClearAllEscPin();
 void SetEscPinAB();
 void SetEscPinAC();
 void SetEscPinBC();

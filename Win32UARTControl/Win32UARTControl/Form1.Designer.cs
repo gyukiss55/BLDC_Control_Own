@@ -3,6 +3,8 @@ using System.IO.Ports;
 using System.Diagnostics;
 using System.Windows.Forms;
 using System.ComponentModel.Design;
+using System.IO;
+
 
 namespace Win32UARTControl
 {
@@ -55,13 +57,15 @@ namespace Win32UARTControl
             this.UARTStatusCheckBox = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.CycleNumberText = new System.Windows.Forms.TextBox();
+            this.cyles = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.PeriodBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.PulseBar)).BeginInit();
             this.SuspendLayout();
             // 
             // ResetButton
             // 
-            this.ResetButton.Location = new System.Drawing.Point(211, 399);
+            this.ResetButton.Location = new System.Drawing.Point(135, 330);
             this.ResetButton.Name = "ResetButton";
             this.ResetButton.Size = new System.Drawing.Size(75, 23);
             this.ResetButton.TabIndex = 9;
@@ -70,7 +74,7 @@ namespace Win32UARTControl
             // 
             // UARTButton
             // 
-            this.UARTButton.Location = new System.Drawing.Point(458, 45);
+            this.UARTButton.Location = new System.Drawing.Point(382, 28);
             this.UARTButton.Name = "UARTButton";
             this.UARTButton.Size = new System.Drawing.Size(75, 23);
             this.UARTButton.TabIndex = 1;
@@ -79,16 +83,16 @@ namespace Win32UARTControl
             // 
             // UARTNameText
             // 
-            this.UARTNameText.Location = new System.Drawing.Point(549, 47);
+            this.UARTNameText.Location = new System.Drawing.Point(473, 30);
             this.UARTNameText.Name = "UARTNameText";
             this.UARTNameText.Size = new System.Drawing.Size(100, 20);
             this.UARTNameText.TabIndex = 2;
-            this.UARTNameText.Text = "COM10";
+            this.UARTNameText.Text = "COM18";
             // 
             // PeriodBar
             // 
-            this.PeriodBar.Location = new System.Drawing.Point(96, 94);
-            this.PeriodBar.Maximum = 100;
+            this.PeriodBar.Location = new System.Drawing.Point(20, 70);
+            this.PeriodBar.Maximum = 20;
             this.PeriodBar.Minimum = 1;
             this.PeriodBar.Name = "PeriodBar";
             this.PeriodBar.Size = new System.Drawing.Size(437, 45);
@@ -98,7 +102,7 @@ namespace Win32UARTControl
             // PulseBar
             // 
             this.PulseBar.LargeChange = 10;
-            this.PulseBar.Location = new System.Drawing.Point(96, 147);
+            this.PulseBar.Location = new System.Drawing.Point(20, 104);
             this.PulseBar.Maximum = 100;
             this.PulseBar.Name = "PulseBar";
             this.PulseBar.Size = new System.Drawing.Size(437, 45);
@@ -107,7 +111,7 @@ namespace Win32UARTControl
             // PeriodTimeText
             // 
             this.PeriodTimeText.Enabled = false;
-            this.PeriodTimeText.Location = new System.Drawing.Point(549, 109);
+            this.PeriodTimeText.Location = new System.Drawing.Point(473, 75);
             this.PeriodTimeText.Name = "PeriodTimeText";
             this.PeriodTimeText.Size = new System.Drawing.Size(100, 20);
             this.PeriodTimeText.TabIndex = 5;
@@ -116,7 +120,7 @@ namespace Win32UARTControl
             // PulseTimeText
             // 
             this.PulseTimeText.Enabled = false;
-            this.PulseTimeText.Location = new System.Drawing.Point(550, 147);
+            this.PulseTimeText.Location = new System.Drawing.Point(474, 105);
             this.PulseTimeText.Name = "PulseTimeText";
             this.PulseTimeText.Size = new System.Drawing.Size(100, 20);
             this.PulseTimeText.TabIndex = 6;
@@ -124,7 +128,7 @@ namespace Win32UARTControl
             // 
             // SaveButton
             // 
-            this.SaveButton.Location = new System.Drawing.Point(97, 399);
+            this.SaveButton.Location = new System.Drawing.Point(21, 330);
             this.SaveButton.Name = "SaveButton";
             this.SaveButton.Size = new System.Drawing.Size(75, 23);
             this.SaveButton.TabIndex = 7;
@@ -133,7 +137,7 @@ namespace Win32UARTControl
             // 
             // ExitButton
             // 
-            this.ExitButton.Location = new System.Drawing.Point(574, 399);
+            this.ExitButton.Location = new System.Drawing.Point(498, 330);
             this.ExitButton.Name = "ExitButton";
             this.ExitButton.Size = new System.Drawing.Size(75, 23);
             this.ExitButton.TabIndex = 8;
@@ -142,7 +146,7 @@ namespace Win32UARTControl
             // 
             // Log1Text
             // 
-            this.Log1Text.Location = new System.Drawing.Point(96, 199);
+            this.Log1Text.Location = new System.Drawing.Point(20, 182);
             this.Log1Text.Name = "Log1Text";
             this.Log1Text.Size = new System.Drawing.Size(554, 20);
             this.Log1Text.TabIndex = 101;
@@ -150,7 +154,7 @@ namespace Win32UARTControl
             // 
             // Log2Text
             // 
-            this.Log2Text.Location = new System.Drawing.Point(97, 225);
+            this.Log2Text.Location = new System.Drawing.Point(21, 208);
             this.Log2Text.Name = "Log2Text";
             this.Log2Text.Size = new System.Drawing.Size(554, 20);
             this.Log2Text.TabIndex = 102;
@@ -158,7 +162,7 @@ namespace Win32UARTControl
             // 
             // Log3Text
             // 
-            this.Log3Text.Location = new System.Drawing.Point(97, 251);
+            this.Log3Text.Location = new System.Drawing.Point(21, 234);
             this.Log3Text.Name = "Log3Text";
             this.Log3Text.Size = new System.Drawing.Size(554, 20);
             this.Log3Text.TabIndex = 103;
@@ -166,7 +170,7 @@ namespace Win32UARTControl
             // 
             // Log4Text
             // 
-            this.Log4Text.Location = new System.Drawing.Point(97, 277);
+            this.Log4Text.Location = new System.Drawing.Point(21, 260);
             this.Log4Text.Name = "Log4Text";
             this.Log4Text.Size = new System.Drawing.Size(554, 20);
             this.Log4Text.TabIndex = 104;
@@ -174,7 +178,7 @@ namespace Win32UARTControl
             // 
             // Log5Text
             // 
-            this.Log5Text.Location = new System.Drawing.Point(96, 303);
+            this.Log5Text.Location = new System.Drawing.Point(20, 286);
             this.Log5Text.Name = "Log5Text";
             this.Log5Text.Size = new System.Drawing.Size(554, 20);
             this.Log5Text.TabIndex = 105;
@@ -182,22 +186,18 @@ namespace Win32UARTControl
             // 
             // SendButton
             // 
-            this.SendButton.Location = new System.Drawing.Point(108, 44);
+            this.SendButton.Location = new System.Drawing.Point(32, 27);
             this.SendButton.Name = "SendButton";
             this.SendButton.Size = new System.Drawing.Size(75, 23);
             this.SendButton.TabIndex = 3;
             this.SendButton.Text = "Send";
             this.SendButton.UseVisualStyleBackColor = true;
             // 
-            // timer1
-            // 
-            this.timer1.Interval = 100;
-            // 
             // UARTStatusCheckBox
             // 
             this.UARTStatusCheckBox.AutoSize = true;
             this.UARTStatusCheckBox.Enabled = false;
-            this.UARTStatusCheckBox.Location = new System.Drawing.Point(683, 50);
+            this.UARTStatusCheckBox.Location = new System.Drawing.Point(591, 33);
             this.UARTStatusCheckBox.Name = "UARTStatusCheckBox";
             this.UARTStatusCheckBox.Size = new System.Drawing.Size(54, 17);
             this.UARTStatusCheckBox.TabIndex = 107;
@@ -208,7 +208,7 @@ namespace Win32UARTControl
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(683, 115);
+            this.label1.Location = new System.Drawing.Point(591, 78);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(43, 13);
             this.label1.TabIndex = 108;
@@ -217,17 +217,36 @@ namespace Win32UARTControl
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(680, 154);
+            this.label2.Location = new System.Drawing.Point(588, 109);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(15, 13);
             this.label2.TabIndex = 109;
             this.label2.Text = "%";
             // 
+            // CycleNumberText
+            // 
+            this.CycleNumberText.Location = new System.Drawing.Point(473, 136);
+            this.CycleNumberText.Name = "CycleNumberText";
+            this.CycleNumberText.Size = new System.Drawing.Size(100, 20);
+            this.CycleNumberText.TabIndex = 110;
+            this.CycleNumberText.Text = "10";
+            // 
+            // cyles
+            // 
+            this.cyles.AutoSize = true;
+            this.cyles.Location = new System.Drawing.Point(591, 139);
+            this.cyles.Name = "cyles";
+            this.cyles.Size = new System.Drawing.Size(31, 13);
+            this.cyles.TabIndex = 111;
+            this.cyles.Text = "cyles";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(659, 373);
+            this.Controls.Add(this.cyles);
+            this.Controls.Add(this.CycleNumberText);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.UARTStatusCheckBox);
@@ -283,6 +302,8 @@ namespace Win32UARTControl
         private const int PeriodBarDefaultValue = 20;
         private const int PulseBarDefaultValue = 0;
 
+        private string logFilePath = "..\\..\\..\\log\\BLDCControlLog.txt";
+
         private void HandleSubcomponenets ()
         {
             UARTButton.Click += UARTButton_Click;
@@ -303,10 +324,20 @@ namespace Win32UARTControl
         {
             if (serialPortOpen)
             {
-                while (serialPort1.BytesToRead > 0)
+                if (serialPort1.BytesToRead > 0)
                 {
-                    string log1 = serialPort1.ReadLine();
-                    AddLog(log1);
+                    //string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                    //Debug.WriteLine(documentsPath);
+                    // Open a StreamWriter in append mode
+                    using (StreamWriter writer = new StreamWriter(logFilePath, true))
+                    {
+                        while (serialPort1.BytesToRead > 0)
+                        {
+                            string log1 = serialPort1.ReadLine();
+                            writer.WriteLine(log1);
+                            AddLog(log1);
+                        }
+                    }
                 }
             }
         }
@@ -335,8 +366,24 @@ namespace Win32UARTControl
         {
             if (serialPortOpen)
             {
-                string str = "PPN:" + PeriodTimeText.Text + "," + PulseTimeText.Text + ",4";
-                serialPort1.WriteLine(str);
+                string periodTxt = PeriodTimeText.Text;
+                try
+                {
+                    int period = Convert.ToInt32(PeriodTimeText.Text);
+                    int percent = Convert.ToInt32(PulseTimeText.Text);
+                    int cycle = Convert.ToInt32(CycleNumberText.Text);
+                    int pulse = percent * 10 * period;
+                    period = period * 1000;
+                    string command = "PPN:" + period.ToString() + "," + pulse.ToString() + "," + cycle.ToString();
+                    Debug.WriteLine($"Command:{command}");
+
+                    serialPort1.WriteLine(command);
+
+                } 
+                catch (FormatException ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                }
             }
         }
         private void SendButton_Click(object sender, EventArgs e)
@@ -414,6 +461,8 @@ namespace Win32UARTControl
 
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
+        private TextBox CycleNumberText;
+        private Label cyles;
     }
 
 }

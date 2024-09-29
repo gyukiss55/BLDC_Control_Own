@@ -65,7 +65,7 @@ bool ReadPeriodPulseAndNumber(String& str)
             pulse = str2.toInt();
             number = str3.toInt();
             if (period > 0 && pulse >= 0 && number > 0) {
-                pulse = (period * pulse) / 100;
+                //pulse = (period * pulse) / 100;
 
                 Serial.print("Period:");
                 Serial.print(period);
