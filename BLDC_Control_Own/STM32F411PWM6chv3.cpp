@@ -1,4 +1,7 @@
+
 #include "Arduino.h"
+
+#if defined (_STM32F411PWM6CHV3_)
 #include "stm32f4xx_hal.h"
 #include "STM32F411PWM6chv3.h"
 
@@ -166,4 +169,59 @@ void SystemClock_ConfigSTM32F411PWM6chv3(void) {
         // Initialization Error
         while (1);
     }
+}
+
+#endif // _STM32F411PWM6CHV3_
+//-------------------------------------------------------------------
+// Define the PWM pins
+#define PWM_PIN1 PB12
+#define PWM_PIN2 PB13
+#define PWM_PIN3 PB14
+#define PWM_PIN4 PB15
+
+// Desired frequency and resolution
+const uint32_t pwm_frequency = 1000000; // 1 MHz
+const uint8_t pwm_resolution = 255;     // 8-bit resolution (0-255)
+
+// Setup function
+void setupPWM3V1() {
+    // Set the PWM frequency for each pin
+    /*
+    analogWriteFrequency(PWM_PIN1, pwm_frequency);
+    analogWriteFrequency(PWM_PIN2, pwm_frequency);
+    analogWriteFrequency(PWM_PIN3, pwm_frequency);
+
+    // Set initial duty cycles
+    analogWrite(PWM_PIN1, 128);  // 50% duty cycle
+    analogWrite(PWM_PIN2, 64);   // 25% duty cycle
+    analogWrite(PWM_PIN3, 192);  // 75% duty cycle
+    */
+
+    // Automatically retrieve TIM instance and channel associated to pin
+  // This is used to be compatible with all STM32 series automatically.
+  // 
+  //TIM_TypeDef *Instance = (TIM_TypeDef *)pinmap_peripheral(digitalPinToPinName(PWM_PIN1), PinMap_PWM);
+  //uint32_t channel = STM_PIN_CHANNEL(pinmap_function(digitalPinToPinName(PWM_PIN1), PinMap_PWM));
+
+
+  // Instantiate HardwareTimer object. Thanks to 'new' instantiation, HardwareTimer is not destructed when setup() function is finished.
+  //HardwareTimer *MyTim = new HardwareTimer(Instance);
+
+  // Configure and start PWM
+  // MyTim->setPWM(channel, pin, 5, 10, NULL, NULL); // No callback required, we can simplify the function call
+  //MyTim->setPWM(channel, PWM_PIN1, 5, 10); // 5 Hertz, 10% dutycycle
+
+  // Assuming Ax pins have PWM capabilities and use a different Timer.
+  analogWrite(PWM_PIN1, 127); // Start PWM on A1, at 1000 Hz with 50% duty cycle
+  analogWriteFrequency(2000); // Set PWM period to 2000 Hz instead of 1000
+  analogWrite(PWM_PIN1, 64); // Start PWM on A2, at 2000 Hz with 25% duty cycle
+  analogWriteFrequency(500); // Set PWM period to 500 Hz
+  analogWrite(PWM_PIN1, 192); // Start PWM on A3, at 500 Hz with 75% duty cycle
+}
+
+// Main loop
+void loopPWM3V1() {
+    // You can update the PWM duty cycle dynamically in the loop if needed
+    // Example:
+    // analogWrite(PWM_PIN1, new_duty_cycle);
 }

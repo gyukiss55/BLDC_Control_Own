@@ -14,7 +14,8 @@ void setup()
     setupLEDHandle ();
     //setupESCControl ();
     //setupADC();
-    setupSTM32F411PWM6chv3 ();
+    //setupSTM32F411PWM6chv3 ();
+    setupPWM3V1 ();
 }
 
 void loop()
@@ -23,5 +24,5 @@ void loop()
     loopLEDHandle ();
     //loopESCControl ();
     //loopADC();
-    loopSTM32F411PWM6chv3 ();
+    //loopSTM32F411PWM6chv3 ();
 }
