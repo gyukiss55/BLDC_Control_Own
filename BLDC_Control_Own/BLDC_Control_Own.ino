@@ -3,16 +3,18 @@
 #include <Arduino.h>
 
 #include "LEDHandle.h"
-#include "ESCControl.h"
+//#include "ESCControl.h"
 #include "SeriaInput.h"
-#include "ADCData.h"
+//#include "ADCData.h"
+#include "STM32F411PWM6chv3.h"
 
 void setup()
 {
     setupSerial();
     setupLEDHandle ();
-    setupESCControl ();
-    setupADC();
+    //setupESCControl ();
+    //setupADC();
+    setupSTM32F411PWM6chv3 ();
 }
 
 void loop()
@@ -20,5 +22,6 @@ void loop()
     loopSerial();
     loopLEDHandle ();
     //loopESCControl ();
-    loopADC();
+    //loopADC();
+    loopSTM32F411PWM6chv3 ();
 }
