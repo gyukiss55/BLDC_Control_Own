@@ -1,0 +1,1 @@
+Write a code snippet for STM32F411 using Arduino IDE control 6 pin for independent PWM output with 1MHz fequency and 256 resolution of duty including stm32f4xx_hal.h, the 6 pwm pin should be PB8,PB9,PB12,PB13,PB14,PB15 and use Timer1 for all pwm output
