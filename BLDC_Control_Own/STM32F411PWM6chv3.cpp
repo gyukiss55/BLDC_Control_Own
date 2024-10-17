@@ -4,12 +4,12 @@
 
 
 // Pin Definitions (you may need to adjust based on your board)
-#define PWM_PIN1 PB8  // TIM1_CH1
-#define PWM_PIN2 PB9  // TIM1_CH2
-#define PWM_PIN3 PB12 // TIM1_CH3
-#define PWM_PIN4 PB13 // TIM1_CH4
-#define PWM_PIN5 PB14 // TIM1_CH5
-#define PWM_PIN6 PB15 // TIM1_CH6
+#define TIM1_CH1 PB8 
+#define TIM1_CH2 PB9 
+#define TIM1_CH3 PB12
+#define TIM1_CH4 PB13
+#define TIM1_CH5 PB14
+#define TIM1_CH6 PB15
 
 // Function prototypes
 
@@ -24,10 +24,10 @@ void setupSTM32F411PWM6chv3() {
     SystemClock_Config();
 
     // Initialize GPIOs for PWM output
-    GPIO_Init();
+    GPIO_InitSTM32F411PWM6chv3();
 
     // Initialize Timer1 for PWM generation
-    TIM1_PWM_Init();
+    TIM1_PWM_InitSTM32F411PWM6chv3();
 
     // Start PWM on all 6 channels
     HAL_TIM_PWM_Start(&htim1, TIM1_CH1); // PB8
@@ -43,13 +43,42 @@ void setupSTM32F411PWM6chv3() {
 void loopSTM32F411PWM6chv3() {
     // Example: Adjust duty cycles dynamically
     for (int dutyCycle = 0; dutyCycle < 256; dutyCycle++) {
-        __HAL_TIM_SET_COMPARE(&htim1, TIM1_CH1, dutyCycle);  // PB8
-        __HAL_TIM_SET_COMPARE(&htim1, TIM1_CH2, dutyCycle);  // PB9
-        __HAL_TIM_SET_COMPARE(&htim1, TIM1_CH3, dutyCycle);  // PB12
-        __HAL_TIM_SET_COMPARE(&htim1, TIM1_CH4, dutyCycle);  // PB13
-        __HAL_TIM_SET_COMPARE(&htim1, TIM1_CH5, dutyCycle);  // PB14
-        __HAL_TIM_SET_COMPARE(&htim1, TIM1_CH6, dutyCycle);  // PB15
-        HAL_Delay(10);
+        for (int state = 0; state < 6; state++) {
+            __HAL_TIM_SET_COMPARE(&htim1, TIM1_CH1, 0);  // PB8
+            __HAL_TIM_SET_COMPARE(&htim1, TIM1_CH2, 0);  // PB9
+            __HAL_TIM_SET_COMPARE(&htim1, TIM1_CH3, 0);  // PB12
+            __HAL_TIM_SET_COMPARE(&htim1, TIM1_CH4, 0);  // PB13
+            __HAL_TIM_SET_COMPARE(&htim1, TIM1_CH5, 0);  // PB14
+            __HAL_TIM_SET_COMPARE(&htim1, TIM1_CH6, 0);  // PB15
+            switch (state) {
+            case 0:
+                __HAL_TIM_SET_COMPARE(&htim1, TIM1_CH1, dutyCycle);  // PB8
+                __HAL_TIM_SET_COMPARE(&htim1, TIM1_CH4, dutyCycle);  // PB13
+                break;
+            case 1:
+                __HAL_TIM_SET_COMPARE(&htim1, TIM1_CH4, dutyCycle);  // PB13
+                __HAL_TIM_SET_COMPARE(&htim1, TIM1_CH5, dutyCycle);  // PB14
+                break;
+            case 2:
+                __HAL_TIM_SET_COMPARE(&htim1, TIM1_CH5, dutyCycle);  // PB14
+                __HAL_TIM_SET_COMPARE(&htim1, TIM1_CH2, dutyCycle);  // PB9
+                break;
+            case 3:
+                __HAL_TIM_SET_COMPARE(&htim1, TIM1_CH2, dutyCycle);  // PB9
+                __HAL_TIM_SET_COMPARE(&htim1, TIM1_CH3, dutyCycle);  // PB12
+                break;
+            case 4:
+                __HAL_TIM_SET_COMPARE(&htim1, TIM1_CH3, dutyCycle);  // PB12
+                __HAL_TIM_SET_COMPARE(&htim1, TIM1_CH6, dutyCycle);  // PB15
+                break;
+            case 5:
+                __HAL_TIM_SET_COMPARE(&htim1, TIM1_CH6, dutyCycle);  // PB15
+                __HAL_TIM_SET_COMPARE(&htim1, TIM1_CH1, dutyCycle);  // PB8
+                break;
+            }
+            HAL_Delay(10);
+
+        }
     }
 }
 
