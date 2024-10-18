@@ -17,6 +17,7 @@ int increment = 1; // Increment step for the duty cycle
 void setup() {
     // Initialize HAL and system clock
     HAL_Init();
+    #if defined (_6PWM_START_)
     SystemClock_Config();
 
     // Initialize the timers
@@ -32,10 +33,15 @@ void setup() {
     // Start PWM for TIM3 (PA6, PA7)
     HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
     HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2);
+    #endif
+
+    pinMode(PC13, OUTPUT);
+    digitalWrite (PC13, LOW);
 }
 
 void loop() {
     // Update the PWM duty cycle on all channels
+    #if defined (_6PWM_START_)
     setPWM_DutyCycle(dutyCycle);
 
     // Increment or decrement duty cycle
@@ -43,8 +49,13 @@ void loop() {
     if (dutyCycle >= 100 || dutyCycle <= 0) {
         increment = -increment; // Reverse the direction
     }
-
+    #endif
+    
     // Add delay to slow the transition
+
+    digitalWrite (PC13, HIGH);
+    HAL_Delay(10);
+    digitalWrite (PC13, LOW);
     HAL_Delay(10);
 }
 
