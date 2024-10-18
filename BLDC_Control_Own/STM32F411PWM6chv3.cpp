@@ -1,5 +1,7 @@
 
 #include "Arduino.h"
+#include "STM32F411PWM6chv3.h"
+#include "MilliSecDelay.h"
 
 #if defined (_STM32F411PWM6CHV3_)
 #include "stm32f4xx_hal.h"
@@ -174,14 +176,25 @@ void SystemClock_ConfigSTM32F411PWM6chv3(void) {
 #endif // _STM32F411PWM6CHV3_
 //-------------------------------------------------------------------
 // Define the PWM pins
-#define PWM_PIN1 PB12
-#define PWM_PIN2 PB13
-#define PWM_PIN3 PB14
-#define PWM_PIN4 PB15
+//#define PWM_PIN1 PB12
+//#define PWM_PIN2 PB13
+//#define PWM_PIN3 PB14
+//#define PWM_PIN4 PB15
+//#define PWM_PIN5 PB8
+//#define PWM_PIN6 PB9
+
+#define PWM_PIN1 PB13
+#define PWM_PIN2 PB14
+#define PWM_PIN3 PB15
+#define PWM_PIN4 PB7
+#define PWM_PIN5 PB8
+#define PWM_PIN6 PB9
 
 // Desired frequency and resolution
 const uint32_t pwm_frequency = 1000000; // 1 MHz
 const uint8_t pwm_resolution = 255;     // 8-bit resolution (0-255)
+
+uint8_t speed = 0;
 
 // Setup function
 void setupPWM3V1() {
@@ -212,16 +225,67 @@ void setupPWM3V1() {
   //MyTim->setPWM(channel, PWM_PIN1, 5, 10); // 5 Hertz, 10% dutycycle
 
   // Assuming Ax pins have PWM capabilities and use a different Timer.
-  analogWrite(PWM_PIN1, 127); // Start PWM on A1, at 1000 Hz with 50% duty cycle
-  analogWriteFrequency(2000); // Set PWM period to 2000 Hz instead of 1000
-  analogWrite(PWM_PIN1, 64); // Start PWM on A2, at 2000 Hz with 25% duty cycle
-  analogWriteFrequency(500); // Set PWM period to 500 Hz
-  analogWrite(PWM_PIN1, 192); // Start PWM on A3, at 500 Hz with 75% duty cycle
+
+    speed = 0;
+
+    analogWriteFrequency(2000); // Set PWM period to 2 kHz instead of 1000
+    analogWrite(PWM_PIN4, speed); // Start PWM on A4
+    analogWrite(PWM_PIN1, speed); // Start PWM on A1
+    analogWrite(PWM_PIN2, speed); // Start PWM on A2
+    analogWrite(PWM_PIN3, speed); // Start PWM on A3
+    analogWrite(PWM_PIN5, speed); // Start PWM on A5
+    analogWrite(PWM_PIN6, speed); // Start PWM on A6
+    delay(1000);
 }
 
 // Main loop
-void loopPWM3V1() {
-    // You can update the PWM duty cycle dynamically in the loop if needed
-    // Example:
-    // analogWrite(PWM_PIN1, new_duty_cycle);
+void loopPWM3V1()
+{
+    int stepTime = 10; // ms
+    for (int8_t s = 0; s <= 255; s++) {
+        speed = s;
+        for (int8_t f = 0; f <= 5; f++) {
+            analogWrite(PWM_PIN1, 0); 
+            analogWrite(PWM_PIN2, 0); 
+            analogWrite(PWM_PIN3, 0); 
+            analogWrite(PWM_PIN4, 0); 
+            analogWrite(PWM_PIN5, 0); 
+            analogWrite(PWM_PIN6, 0); 
+
+            //MicroSecDelay delMicrosSec;
+            //delMicrosSec.Restart(10000);
+
+            //while (!delMicrosSec.TestAndSet()) {}
+
+            switch (f) {
+            case 0:
+                analogWrite(PWM_PIN1, speed); 
+                analogWrite(PWM_PIN4, speed); 
+                break;
+            case 1:
+                analogWrite(PWM_PIN5, speed);
+                analogWrite(PWM_PIN4, speed);
+                break;
+            case 2:
+                analogWrite(PWM_PIN5, speed);
+                analogWrite(PWM_PIN2, speed);
+                break;
+            case 3:
+                analogWrite(PWM_PIN3, speed);
+                analogWrite(PWM_PIN2, speed);
+                break;
+            case 4:
+                analogWrite(PWM_PIN3, speed);
+                analogWrite(PWM_PIN6, speed);
+                break;
+            case 5:
+                analogWrite(PWM_PIN1, speed);
+                analogWrite(PWM_PIN6, speed);
+                break;
+            }
+            delay(stepTime);
+        }
+
+    }
+
 }

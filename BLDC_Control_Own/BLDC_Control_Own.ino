@@ -12,7 +12,7 @@ void setup()
 {
     setupSerial();
     setupLEDHandle ();
-    //setupESCControl ();
+    //setupESCControl (); 
     //setupADC();
     //setupSTM32F411PWM6chv3 ();
     setupPWM3V1 ();
@@ -25,4 +25,5 @@ void loop()
     //loopESCControl ();
     //loopADC();
     //loopSTM32F411PWM6chv3 ();
+    loopPWM3V1 ();
 }
