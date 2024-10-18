@@ -1,5 +1,6 @@
 // ChatGPT : how many pwm pin can be controlled by STM32F411
-
+// ChatGPT : how can I start 2 timers at the same time in stm32f411
+// 
 // Declare Timer Handles
 TIM_HandleTypeDef htim1;  // Master Timer
 TIM_HandleTypeDef htim2;  // Slave Timer
