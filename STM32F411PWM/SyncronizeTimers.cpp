@@ -3,7 +3,7 @@
 // 
 // Declare Timer Handles
 TIM_HandleTypeDef htim1;  // Master Timer
-TIM_HandleTypeDef htim2;  // Slave Timer
+e:\Work\GitHub\_MyGit\BLDC_Control_Own\STM32F411PWM\STM32F411PWM\STM32F411PWM.inoTIM_HandleTypeDef htim2;  // Slave Timer
 
 // Master Timer (TIM1) configuration
 void MX_TIM1_Init(void)
