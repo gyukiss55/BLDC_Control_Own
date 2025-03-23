@@ -18,9 +18,10 @@ void LED_Init()
 
 void loop() {
   // Change duty cycles dynamically (example: sweep)
+
   setPWMDuty(TIM1, 1, 50); // TIM1 CH1 = PA8
-  setPWMDuty(TIM1, 2, 30); // TIM1 CH2 = PA9
-  setPWMDuty(TIM1, 3, 70); // TIM1 CH3 = PA10
+  //setPWMDuty(TIM1, 2, 30); // TIM1 CH2 = PA9
+  //setPWMDuty(TIM1, 3, 70); // TIM1 CH3 = PA10
 
   setPWMDuty(TIM2, 1, 20); // TIM2 CH1 = PA0
   setPWMDuty(TIM3, 1, 80); // TIM3 CH1 = PA6
@@ -28,7 +29,7 @@ void loop() {
 
   LED_Toggle();
   Serial.print(millis());
-  Serial.println(" PWM a8, A9, A10, A0, A6, A7 (50, 30, 70, 20, 80, 60)");
+  Serial.println(" PWM A8, -A9, -A10, A0, A6, A7 (50, 30, 70, 20, 80, 60)");
   LED_Toggle();
 }
 
@@ -59,8 +60,8 @@ void pwmInit() {
   // GPIO setup
   
   pinMode(PA8, LL_GPIO_OUTPUT_PUSHPULL);
-  pinMode(PA9, LL_GPIO_OUTPUT_PUSHPULL);
-  pinMode(PA10, LL_GPIO_OUTPUT_PUSHPULL);
+  //pinMode(PA9, LL_GPIO_OUTPUT_PUSHPULL);
+  //pinMode(PA10, LL_GPIO_OUTPUT_PUSHPULL);
   pinMode(PA0, LL_GPIO_OUTPUT_PUSHPULL);
   pinMode(PA6, LL_GPIO_OUTPUT_PUSHPULL);
   pinMode(PA7, LL_GPIO_OUTPUT_PUSHPULL);
