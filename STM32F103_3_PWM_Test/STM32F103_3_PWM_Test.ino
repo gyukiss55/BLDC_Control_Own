@@ -1,3 +1,5 @@
+#include <HardwareTimer.h>
+
 TIM_TypeDef *Instance = TIM4;
 HardwareTimer *MyTim = new HardwareTimer(Instance);
 
@@ -14,8 +16,8 @@ void loop ()
   uint32_t currentTs = millis ();
   if (currentTs - lastTsDuty > 100) {
     lastTsDuty = currentTs;
-    duty++;
-    if (duty >= 100)
+    duty+=25;
+    if (duty >= 3600)
       duty = 0;
     MyTim->setCaptureCompare(2, duty);
 
