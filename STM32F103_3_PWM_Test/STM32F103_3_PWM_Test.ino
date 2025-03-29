@@ -1,25 +1,30 @@
-#include <HardwareTimer.h>
-
-TIM_TypeDef *Instance = TIM4;
-HardwareTimer *MyTim = new HardwareTimer(Instance);
+#include "STMTimer.h"
 
 void setup() {
-  MyTim->setPWM(2, PB7, 20000, 50); // Channel 2, 20 kHz, 50% duty
-  MyTim->setPWM(3, PB8, 20000, 20); // Channel 2, 20 kHz, 50% duty
-  MyTim->setPWM(4, PB9, 20000, 70); // Channel 2, 20 kHz, 50% duty
+  Serial.begin(115200);
+  delay(2000);
+  Serial.println("STM32F103-PWM B7, B8, B9 (50, 20, 70)");
+
+  SetupTimer4 ();
+  SetupTimer3 (); 
+  SetupExternalInterrupt ();
+  SetupDigitalIO();
 }
 
 void loop ()
 {
-  static uint32_t duty = 0;
-  static uint32_t lastTsDuty = 0;
-  uint32_t currentTs = millis ();
-  if (currentTs - lastTsDuty > 100) {
-    lastTsDuty = currentTs;
-    duty+=25;
-    if (duty >= 3600)
-      duty = 0;
-    MyTim->setCaptureCompare(2, duty);
 
+  LoopTimer4Duty ();
+  SerialInputHandling ();
+
+}
+
+
+void SerialInputHandling ()
+{
+  if (Serial.available() > 0) { //Check if data is available in the serial buffer
+    String data = Serial.readStringUntil('\n'); //Read the data until a newline character
+    Serial.print("You entered: ");
+    Serial.println(data);
   }
 }
