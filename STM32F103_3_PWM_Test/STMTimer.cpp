@@ -204,3 +204,46 @@ void LoopTimer4Duty()
 
     }
 }
+
+void SerialInputHandling()
+{
+    if (Serial.available() > 0) { //Check if data is available in the serial buffer
+        String data = Serial.readStringUntil('\n'); //Read the data until a newline character
+        Serial.print("You entered: ");
+        Serial.println(data);
+        for (int i = 0; i < 1; i++) {
+            if (toupper(data[0]) != 'D') 
+				break;
+
+            int p1 = data.indexOf(',');
+            if (p1 >= data.length())
+                break;
+			String num1Str = data.substring(1, p1);
+
+			String data2 = data.substring(p1 + 1);
+            if (toupper(data[0]) != 'P')
+                break;
+            int p2 = data2.indexOf(';');
+            if (p2 >= data2.length())
+                break;
+
+			String num2Str = data2.substring(1, p2);
+
+			int num1 = num1Str.toInt();
+			int num2 = num2Str.toInt();
+			    
+			if (num1 >= 0 && num2 > 10  && num1 < 100) {
+				//Timer4->setCaptureCompare(2, num1);
+				
+                //Timer3->setPWM(1, PA6, num2, 50); // Channel 1, 2000 Hz, 50% duty
+                //Timer3->attachInterrupt(Timer3Callback);
+				Serial.print("Set PWM1 to ");
+				Serial.print(num1);
+				Serial.print(" and PWM2 to ");
+				Serial.println(num2);
+				return;
+			}
+        }
+        Serial.println("Usage: 'Dxx,Pyyyyy;'");
+     }
+}

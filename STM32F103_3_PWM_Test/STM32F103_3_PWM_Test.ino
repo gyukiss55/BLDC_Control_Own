@@ -20,11 +20,3 @@ void loop ()
 }
 
 
-void SerialInputHandling ()
-{
-  if (Serial.available() > 0) { //Check if data is available in the serial buffer
-    String data = Serial.readStringUntil('\n'); //Read the data until a newline character
-    Serial.print("You entered: ");
-    Serial.println(data);
-  }
-}
