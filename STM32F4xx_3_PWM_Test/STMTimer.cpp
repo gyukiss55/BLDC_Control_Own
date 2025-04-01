@@ -80,14 +80,12 @@ void Timer3Callback()
 	Clear6OutputStatus();
     Clear6Output();
 
-	b11State = !b11State; // debug signal
-	if (b11State) {
-		digitalWrite(PB11, HIGH);
-    }
-    else
-    {
-        digitalWrite(PB11, LOW);
-    }
+	//b11State = !b11State; // debug signal
+	//if (b11State)
+	//	digitalWrite(PB11, HIGH);
+ //   else
+ //       digitalWrite(PB11, LOW);
+
 
 	blcdStatus++;
 	if (blcdStatus > 6) {
@@ -138,7 +136,7 @@ void SetupDigitalIO()
 {
 	pinMode(PB6, INPUT); // External interrupt
 
-    pinMode(PB11, OUTPUT); // debug signal
+    //pinMode(PB11, OUTPUT); // debug signal
 
 	pinMode(PB8, OUTPUT);
 	pinMode(PB9, OUTPUT);
