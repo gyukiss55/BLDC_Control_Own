@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BLDC Serial Control</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f2f2;
+            padding: 20px;
+        }
+
+        .container {
+            background: #ffffff;
+            padding: 20px;
+            max-width: 400px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        label {
+            display: block;
+            margin-top: 12px;
+            font-weight: bold;
+        }
+
+        input, button, textarea {
+            width: 100%;
+            margin-top: 5px;
+            padding: 6px;
+            font-size: 14px;
+        }
+
+        textarea {
+            height: 4.5em; /* ~3 lines */
+            resize: none;
+        }
+
+        button {
+            margin-top: 15px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>BLDC Serial Control</h2>
+
+    <label for="serial_channel">Serial Channel</label>
+    <input type="text" id="serial_channel" value="COM7">
+
+    <label for="period_time">Period Time</label>
+    <input type="number" id="period_time"
+           min="100" max="10000000" value="100000">
+
+    <label for="pulse_time">Pulse Time</label>
+    <input type="number" id="pulse_time"
+           min="0" max="99" value="0">
+
+    <button id="sendBtn">Send</button>
+
+    <label for="status_line">Status</label>
+    <textarea id="status_line" readonly></textarea>
+</div>
+
+<script>
+    let port;
+    let reader;
+    let writer;
+
+    const statusLine = document.getElementById("status_line");
+
+    function logStatus(text) {
+        const lines = statusLine.value.split("\n");
+        lines.push(text);
+        while (lines.length > 3) lines.shift();
+        statusLine.value = lines.join("\n");
+    }
+
+    async function connectSerial() {
+        if (port) return;
+
+        port = await navigator.serial.requestPort();
+        await port.open({ baudRate: 115200 });
+
+        writer = port.writable.getWriter();
+        reader = port.readable.getReader();
+
+        logStatus("Serial connected");
+        readLoop();
+    }
+
+    async function readLoop() {
+        try {
+            while (true) {
+                const { value, done } = await reader.read();
+                if (done) break;
+                const text = new TextDecoder().decode(value);
+                logStatus(text.trim());
+            }
+        } catch (err) {
+            logStatus("Read error");
+        }
+    }
+
+    document.getElementById("sendBtn").addEventListener("click", async () => {
+        const period = document.getElementById("period_time").value;
+        const pulse = document.getElementById("pulse_time").value;
+
+        const message = `PP:${period},${pulse}\r\n`;
+
+        try {
+            await connectSerial();
+            await writer.write(new TextEncoder().encode(message));
+            logStatus("TX: " + message.trim());
+        } catch (err) {
+            logStatus("Serial error");
+        }
+    });
+</script>
+
+</body>
+</html>
