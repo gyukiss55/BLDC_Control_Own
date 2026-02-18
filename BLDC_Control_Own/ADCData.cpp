@@ -121,7 +121,7 @@ void DumpSum()
 
 void WritePulseBegin()
 {
-	ClearAllEscPin();
+	ClearAllESCPin();
 	int stat = numPulseCurrent % 6;
 	switch (stat) {
 	case 0:
@@ -148,7 +148,7 @@ void WritePulseBegin()
 
 void WritePulseEnd()
 {
-	ClearAllEscPin();
+	ClearAllESCPin();
 }
 
 void printDeltaUS()

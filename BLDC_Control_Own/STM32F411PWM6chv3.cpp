@@ -6,6 +6,7 @@
 #if defined (_STM32F411PWM6CHV3_)
 #include "stm32f4xx_hal.h"
 #include "STM32F411PWM6chv3.h"
+#include "ESCControl.h"
 
 
 // Pin Definitions (you may need to adjust based on your board)
@@ -183,12 +184,12 @@ void SystemClock_ConfigSTM32F411PWM6chv3(void) {
 //#define PWM_PIN5 PB8
 //#define PWM_PIN6 PB9
 
-#define PWM_PIN1 PB7
-#define PWM_PIN2 PB14
-#define PWM_PIN3 PB15
-#define PWM_PIN4 PB7
-#define PWM_PIN5 PB8
-#define PWM_PIN6 PB9
+#define PWM_PINAH PB12
+#define PWM_PINAL PB13
+#define PWM_PINBH PB14
+#define PWM_PINBL PB15
+#define PWM_PINCH PB8
+#define PWM_PINCL PB9
 
 // Desired frequency and resolution
 const uint32_t pwm_frequency = 100000; // 100 kHz
@@ -231,7 +232,7 @@ void setupPWM3V1() {
     uint32_t pwm_freq = 100000; // 100 kHz
     uint32_t pwm_period = (SystemCoreClock / pwm_freq) - 1; // AutoReload érték
 
-    timerPWM->setPWM(PWM_PIN1, STM_PIN_CHANNEL(2), pwm_freq, 128);
+  // timerPWM->setPWM(PWM_PIN1, STM_PIN_CHANNEL(2), pwm_freq, 128);
     speed = 0;
 /*
     analogWriteFrequency(2000); // Set PWM period to 2 kHz instead of 1000
@@ -255,7 +256,7 @@ void loopPWM3V1()
     int stepTime = 10; // ms
     for (int8_t s = 0; s <= 255; s++) {
         speed = s;
-        SetDuty(PWM_PIN1, speed);
+        //SetDuty(PWM_PIN1, speed);
         /*
         for (int8_t f = 0; f <= 5; f++) {
             analogWrite(PWM_PIN1, 0); 
@@ -300,6 +301,97 @@ void loopPWM3V1()
         }
         */
 
+    }
+
+}
+
+const int numPhases = 6;
+const int baseCycleTime = 100000;
+
+static uint32_t lastUpdateTime = 0;
+static uint32_t lastPulseTime = 0;
+static int currentPhase = 0;
+
+static int cycleTime = baseCycleTime; // 100 ms cycle time for 6-step commutation (adjust as needed)
+static int currentPeriodTime = 0;
+static int currentPulseTime = 0;
+
+void ClearAllPWMPin()
+{
+    digitalWrite(PWM_PINAH, LOW);
+    digitalWrite(PWM_PINAL, LOW);
+    digitalWrite(PWM_PINBH, LOW);
+    digitalWrite(PWM_PINBL, LOW);
+    digitalWrite(PWM_PINCH, LOW);
+    digitalWrite(PWM_PINCL, LOW);
+}
+
+// Setup function
+void setupPWM6V1() {
+	pinMode(PWM_PINAH, OUTPUT);
+    pinMode(PWM_PINAL, OUTPUT);
+    pinMode(PWM_PINBH, OUTPUT);
+    pinMode(PWM_PINBL, OUTPUT);
+    pinMode(PWM_PINCH, OUTPUT);
+    pinMode(PWM_PINCL, OUTPUT);
+
+    ClearAllPWMPin();
+
+    currentPeriodTime = GetNextPeriod();
+    currentPulseTime = GetNextPulse();
+
+	lastUpdateTime = micros() + 10*1000*1000;
+}
+
+void loopPWM6V1() {
+    uint32_t now = micros();
+    if (now < lastUpdateTime) {
+        lastUpdateTime = now;
+        return;
+    }
+	bool updatePhase = false;
+    if (now - lastUpdateTime > currentPeriodTime) {
+        lastUpdateTime += currentPeriodTime;
+		lastPulseTime = lastUpdateTime + currentPulseTime;
+        currentPhase = (currentPhase + 1) % numPhases;
+        currentPeriodTime = GetNextPeriod();
+        currentPulseTime = GetNextPulse();
+        ClearAllPWMPin();
+		updatePhase = true;
+	}
+    if (currentPulseTime > 0 && currentPulseTime < currentPeriodTime) {
+        if (updatePhase) {
+            switch (currentPhase) {
+            case 0:
+                digitalWrite(PWM_PINAH, HIGH);
+                digitalWrite(PWM_PINBL, HIGH);
+                break;
+            case 1:
+                digitalWrite(PWM_PINAL, HIGH);
+                digitalWrite(PWM_PINBL, HIGH);
+                break;
+            case 2:
+                digitalWrite(PWM_PINAL, HIGH);
+                digitalWrite(PWM_PINCH, HIGH);
+                break;
+            case 3:
+                digitalWrite(PWM_PINBH, HIGH);
+                digitalWrite(PWM_PINCH, HIGH);
+                break;
+            case 4:
+                digitalWrite(PWM_PINBH, HIGH);
+                digitalWrite(PWM_PINCL, HIGH);
+                break;
+            case 5:
+                digitalWrite(PWM_PINAH, HIGH);
+                digitalWrite(PWM_PINCL, HIGH);
+                break;
+            }
+            updatePhase = false;
+		}
+        if (now > lastPulseTime) {
+            ClearAllPWMPin();
+		}
     }
 
 }

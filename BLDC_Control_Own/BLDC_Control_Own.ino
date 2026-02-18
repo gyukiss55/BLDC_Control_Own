@@ -15,7 +15,7 @@ void setup()
     //setupESCControl (); 
     //setupADC();
     //setupSTM32F411PWM6chv3 ();
-    //setupPWM3V1 ();
+    setupPWM6V1 ();
 }
 
 void loop()
@@ -25,5 +25,5 @@ void loop()
     //loopESCControl ();
     //loopADC();
     //loopSTM32F411PWM6chv3 ();
-    //loopPWM3V1 ();
+    loopPWM6V1 ();
 }

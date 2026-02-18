@@ -33,7 +33,15 @@ int pulseMSNext = 0;
 MilliSecDelay periodTimerMS;
 MilliSecDelay pulseTimerMS;
 
-void ClearAllEscPin();
+void ClearAllESCPin()
+{
+	digitalWrite(EscAPPin, LOW);
+	digitalWrite(EscBPPin, LOW);
+	digitalWrite(EscCPPin, LOW);
+	digitalWrite(EscAMPin, LOW);
+	digitalWrite(EscBMPin, LOW);
+	digitalWrite(EscCMPin, LOW);
+}
 
 void setupESCControl()
 {
@@ -44,22 +52,14 @@ void setupESCControl()
 	pinMode(EscCPPin, OUTPUT);
 	pinMode(EscCMPin, OUTPUT);
 
-	ClearAllEscPin();
+	ClearAllESCPin();
 
 	periodTimerMS.Restart(periodMS);
 	if (pulseMS > 0 && pulseMS < periodMS)
 		pulseTimerMS.Restart(pulseMS);
 }
 
-void ClearAllEscPin()
-{
-	digitalWrite(EscAPPin, LOW);
-	digitalWrite(EscBPPin, LOW);
-	digitalWrite(EscCPPin, LOW);
-	digitalWrite(EscAMPin, LOW);
-	digitalWrite(EscBMPin, LOW);
-	digitalWrite(EscCMPin, LOW);
-}
+
 
 void SetEscPinAB()
 {
@@ -131,7 +131,7 @@ void DumpPhase ()
 void loopESCControl()
 {
 	if (pulseMS > 0 && pulseMS < periodMS && pulseTimerMS.TestAndSet()) {
-		ClearAllEscPin();
+		ClearAllESCPin();
 		pulseTimerMS.Stop();
 		DumpPhase ();
 	}
@@ -156,32 +156,32 @@ void loopESCControl()
 
 		switch (phaseAll) {
 		case 0:
-			ClearAllEscPin();
+			ClearAllESCPin();
 			if (pulseMS > 0) 
 				SetEscPinAB();
 			break;
 		case 1:
-			ClearAllEscPin();
+			ClearAllESCPin();
 			if (pulseMS > 0)
 				SetEscPinAC();
 			break;
 		case 2:
-			ClearAllEscPin();
+			ClearAllESCPin();
 			if (pulseMS > 0) 
 				SetEscPinBC();
 			break;
 		case 3:
-			ClearAllEscPin();
+			ClearAllESCPin();
 			if (pulseMS > 0) 
 				SetEscPinBA();
 			break;
 		case 4:
-			ClearAllEscPin();
+			ClearAllESCPin();
 			if (pulseMS > 0) 
 				SetEscPinCA();
 			break;
 		case 5:
-			ClearAllEscPin();
+			ClearAllESCPin();
 			if (pulseMS > 0) 
 				SetEscPinCB();
 			break;

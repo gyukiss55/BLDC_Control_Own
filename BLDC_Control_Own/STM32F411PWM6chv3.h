@@ -25,3 +25,6 @@ void TIM1_PWM_InitSTM32F411PWM6chv3(void);
 
 void setupPWM3V1();
 void loopPWM3V1();
+
+void setupPWM6V1();
+void loopPWM6V1();
