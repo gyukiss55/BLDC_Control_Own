@@ -11,3 +11,6 @@ void SetEscPinBC();
 void SetEscPinBA();
 void SetEscPinCA();
 void SetEscPinCB();
+
+int GetNextPeriod();
+int GetNextPulse();

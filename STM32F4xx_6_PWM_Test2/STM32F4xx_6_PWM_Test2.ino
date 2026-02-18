@@ -26,7 +26,7 @@ void loop() {
   static int duty = 0;
   static uint32_t tsLast = 0;
   Timer4->setCaptureCompare(2, duty, PERCENT_COMPARE_FORMAT); // PB7 = TIM4_CH2
-  duty = (duty + 5) % 100;
+  duty = (duty + 1) % 100;
   delay(100);
 
   uint32_t tsCurrent = millis ();
@@ -50,18 +50,18 @@ void LED_Init()
 
 void LED_Toggle()
 {
-  static uint32_t tsLast = 0;
+  static uint32_t tsLastLED = 0;
   static bool status = false;
   uint32_t tsCurrent = millis();
-  if (status && (tsCurrent - tsLast) > 200){
+  if (status && (tsCurrent - tsLastLED) > 200){
     digitalWrite(PC13, HIGH);
     status = !status;
-    tsLast = tsCurrent;
+    tsLastLED = tsCurrent;
 
-  } else if (status && (tsCurrent - tsLast) > 300){
+  } else if (!status && (tsCurrent - tsLastLED) > 300){
     digitalWrite(PC13, LOW);
     status = !status;
-    tsLast = tsCurrent;
+    tsLastLED = tsCurrent;
   }
  
 

@@ -60,15 +60,15 @@ void loopLEDHandle() {
         digitalWrite(LED_Pin, HIGH);
         lastTsSerial += 100000;
         ledStatus = !ledStatus;
-        Serial.print ("Ts1:");
-        Serial.println (lastTsSerial);
+        //Serial.print ("Ts1:");
+        //Serial.println (lastTsSerial);
     }
     else if (!ledStatus && ((curr - lastTsSerial)>= 400000)) {
         digitalWrite(LED_Pin, LOW);
         lastTsSerial += 400000;
         ledStatus = !ledStatus;
-        printTsSerial ();
-        Serial.print ("Ts2:");
-        Serial.println (lastTsSerial);
+        //printTsSerial ();
+        //Serial.print ("Ts2:");
+        //Serial.println (lastTsSerial);
     }
 }

@@ -12,6 +12,8 @@ void setupSerial()
 {
     Serial.begin(115200);
     delay(2000);
+    Serial.println("Usage: PP:<period>,<pulse>");
+    Serial.println(" or: PPCS:<period>,<pulse>,<cycle>,<sample>");
 }
 
 bool ReadPeriodAndPulse (String& str)
@@ -107,6 +109,19 @@ bool ReadPeriodPulseCycleSample(String& str)
 
 void loopSerial()
 {
+    static int32_t msLast = 0; 
+    int32_t msNow = millis ();
+    if (msNow - msLast >= 10000){
+        msLast = msLast + 10000;
+        Serial.print(msNow);
+        Serial.print(". period:");
+        Serial.print(GetNextPeriod ());
+        Serial.print(". pulse:");
+        Serial.print(GetNextPulse ());
+        Serial.println("");
+    }
+
+
 
     if (Serial.available()) {
         char ch = Serial.read();

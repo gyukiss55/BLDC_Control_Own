@@ -196,3 +196,13 @@ void SetNextPeriodPulse(int period, int pulse)
 	pulseMSNext = pulse;
 }
 
+int GetNextPeriod()
+{
+	return periodMSNext;
+}
+int GetNextPulse()
+{
+	return pulseMSNext;
+}
+
+

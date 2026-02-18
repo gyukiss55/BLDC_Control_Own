@@ -183,7 +183,7 @@ void SystemClock_ConfigSTM32F411PWM6chv3(void) {
 //#define PWM_PIN5 PB8
 //#define PWM_PIN6 PB9
 
-#define PWM_PIN1 PB13
+#define PWM_PIN1 PB7
 #define PWM_PIN2 PB14
 #define PWM_PIN3 PB15
 #define PWM_PIN4 PB7
@@ -191,10 +191,12 @@ void SystemClock_ConfigSTM32F411PWM6chv3(void) {
 #define PWM_PIN6 PB9
 
 // Desired frequency and resolution
-const uint32_t pwm_frequency = 1000000; // 1 MHz
+const uint32_t pwm_frequency = 100000; // 100 kHz
 const uint8_t pwm_resolution = 255;     // 8-bit resolution (0-255)
 
 uint8_t speed = 0;
+
+HardwareTimer *timerPWM = new HardwareTimer(TIM4); // for PB7
 
 // Setup function
 void setupPWM3V1() {
@@ -226,8 +228,12 @@ void setupPWM3V1() {
 
   // Assuming Ax pins have PWM capabilities and use a different Timer.
 
-    speed = 0;
+    uint32_t pwm_freq = 100000; // 100 kHz
+    uint32_t pwm_period = (SystemCoreClock / pwm_freq) - 1; // AutoReload érték
 
+    timerPWM->setPWM(PWM_PIN1, STM_PIN_CHANNEL(2), pwm_freq, 128);
+    speed = 0;
+/*
     analogWriteFrequency(2000); // Set PWM period to 2 kHz instead of 1000
     analogWrite(PWM_PIN4, speed); // Start PWM on A4
     analogWrite(PWM_PIN1, speed); // Start PWM on A1
@@ -235,7 +241,12 @@ void setupPWM3V1() {
     analogWrite(PWM_PIN3, speed); // Start PWM on A3
     analogWrite(PWM_PIN5, speed); // Start PWM on A5
     analogWrite(PWM_PIN6, speed); // Start PWM on A6
+*/
     delay(1000);
+}
+
+void SetDuty(int pwm_pin, int duty) {
+  timerPWM->setCaptureCompare(STM_PIN_CHANNEL(2), duty);
 }
 
 // Main loop
@@ -244,6 +255,8 @@ void loopPWM3V1()
     int stepTime = 10; // ms
     for (int8_t s = 0; s <= 255; s++) {
         speed = s;
+        SetDuty(PWM_PIN1, speed);
+        /*
         for (int8_t f = 0; f <= 5; f++) {
             analogWrite(PWM_PIN1, 0); 
             analogWrite(PWM_PIN2, 0); 
@@ -285,6 +298,7 @@ void loopPWM3V1()
             }
             delay(stepTime);
         }
+        */
 
     }
 
