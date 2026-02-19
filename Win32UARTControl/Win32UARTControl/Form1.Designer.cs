@@ -398,7 +398,8 @@ namespace Win32UARTControl
                     int pulse = Convert.ToInt32(PulseTimeText.Text);
                     int cycle = Convert.ToInt32(CycleNumberText.Text);
                     int sample = Convert.ToInt32(SampleNrText.Text);
-                    string command = "PPCS:" + period.ToString() + "," + pulse.ToString() + "," + cycle.ToString() + "," + sample.ToString();
+                    //string command = "PPCS:" + period.ToString() + "," + pulse.ToString() + "," + cycle.ToString() + "," + sample.ToString();
+                    string command = "PP:" + period.ToString() + "," + pulse.ToString();
                     Debug.WriteLine($"Command:{command}");
 
                     serialPort1.WriteLine(command);
