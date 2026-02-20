@@ -36,30 +36,47 @@ uint16_t getBLDCState(int step)
     return state;
 }
 
-int fillBLDCSequence(int indexStart, uint32_t tsStart, uint32_t gap, uint32_t pulse)
+int fillBLDCSequence(int indexStart, uint32_t tsStart, uint32_t pulse, uint32_t gap)
 {
     int j = indexStart;
     for (int i = 0; i < 6; i++) {
-        j = (indexStart + i) % BUFFER_SIZE;
         tsStart += gap;
         vol_ti_ts[j] = tsStart;
         vol_ti_BLDC[j] = 0; // Clear state first
-
         j = (j + 1) % BUFFER_SIZE;
+
         tsStart += gap;
         vol_ti_ts[j] = tsStart;
         vol_ti_BLDC[j] = getBLDCState(i);
-
         j = (j + 1) % BUFFER_SIZE;
+
         tsStart += pulse;
         vol_ti_ts[j] = tsStart;
         vol_ti_BLDC[j] = 0;
-    }
-    return (j + 1) % BUFFER_SIZE;
+        j = (j + 1) % BUFFER_SIZE;
+   }
+   return j;
+}
+
+void UnitTest()
+{
+	static int step = 0;
+    if (step == 0) {
+        for (step = 0; step < 6; step++) {
+			Serial.printf("Step %d: BLDC state: %04X\n", step, getBLDCState(step));
+		}
+        uint32_t nowTS = micros ();
+		nowTS = nowTS - (nowTS % 1000); // Align to 1ms boundary
+        int indexStart = vol_ti_ix_wr;
+        int indexEnd = fillBLDCSequence(indexStart, nowTS, 1000, 500);
+        Serial.printf("Filled BLDC sequence from index %d to %d\n", indexStart, indexEnd);
+	}
 }
 
 void BLDCControlLoop()
 {
+    UnitTest();
+
     if (pulseMS <= 0 || pulseMS > periodMS)
         return; // No pulse, skip control
     periodMSPrev = periodMS;

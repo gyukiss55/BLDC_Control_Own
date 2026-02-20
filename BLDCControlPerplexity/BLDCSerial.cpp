@@ -10,18 +10,28 @@ void setupSerial()
 	Serial.begin(115200);
 	delay(2000);
 	Serial.println("STM32F411CE start...");
+	Serial.printf("%x, %x, %x, %x, %x, %x,\n",
+		BLDC_MASKAHBL, BLDC_MASKAHCL,
+		BLDC_MASKBHCL, BLDC_MASKBHAL,
+		BLDC_MASKCHAL, BLDC_MASKCHBL);
+	delay(10000);
 }
 
 void SerialOutputLoop()
 {
 	static uint32_t lastTS = 0;
 	uint32_t nowTS = millis();
-	const uint32_t DeltaTS = 1000;
-	if (nowTS - lastTS >= DeltaTS) {
-		lastTS += DeltaTS;
+	const uint32_t DeltaTS1 = 5000;
+	static int num = 0;
+	if (nowTS - lastTS >= DeltaTS1) {
+		lastTS += DeltaTS1;
 		//Serial.printf("%d. TI:%d, EI:%d, FB:%d, Period:%d, Pulse:%d\n", nowTS, periodMS, pulseMS);
 		Serial.printf("%d,%d,%d,%d,%d\n", numTimerIntChangeBLDC, numExtIntChangeBLDC, numFillBLDC, periodMS, pulseMS);
 		//Serial.printf("%d,%d\n", digitalRead(PB12), digitalRead(PB8));
+		num++;
+		if (num % 4 == 0) {
+			SnapshotBLDCControl();
+		}
 	}
 }
 
