@@ -2,11 +2,11 @@
 #include "Arduino.h"
 #include "STM32F411PWM6chv3.h"
 #include "MilliSecDelay.h"
+#include "ESCControl.h"
 
 #if defined (_STM32F411PWM6CHV3_)
 #include "stm32f4xx_hal.h"
 #include "STM32F411PWM6chv3.h"
-#include "ESCControl.h"
 
 
 // Pin Definitions (you may need to adjust based on your board)
