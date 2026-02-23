@@ -9,7 +9,7 @@ void setupSerial()
 {
 	Serial.begin(115200);
 	delay(2000);
-	Serial.println("STM32F411CE start Ver 0.81 ...");
+	Serial.println("STM32F411CE start Ver 0.91 ...");
 	Serial.printf("%x, %x, %x, %x, %x, %x,\n",
 		BLDC_MASKAHBL, BLDC_MASKAHCL,
 		BLDC_MASKBHCL, BLDC_MASKBHAL,
@@ -19,6 +19,7 @@ void setupSerial()
 
 void SerialOutputLoop()
 {
+	static bool debug_flag = false;
 	static uint32_t lastTS = 0;
 	uint32_t nowTS = millis();
 	const uint32_t DeltaTS1 = 5000;
@@ -29,7 +30,7 @@ void SerialOutputLoop()
 		Serial.printf("%d,%d,%d,%d,%d\n", numTimerIntChangeBLDC, numExtIntChangeBLDC, numFillBLDC, periodMS, pulseMS);
 		//Serial.printf("%d,%d\n", digitalRead(PB12), digitalRead(PB8));
 		num++;
-		if (num % 4 == 0) {
+		if (debug_flag && (num % 4 == 0)) {
 			SnapshotBLDCControl();
 		}
 	}
@@ -69,9 +70,25 @@ void SerialInputLoop()
 
 void SnapshotBLDCControl()
 {
+	uint32_t sn_t[BUFFER_SIZE] = { 0 };
+	uint16_t sn_v[BUFFER_SIZE] = { 0 };
+	int ix = vol_ti_ix_wr;
+
 	for (int i = 0; i < BUFFER_SIZE; i++) {
-		int j = (vol_ti_ix_rd + i) % BUFFER_SIZE;
-		Serial.printf("%d:%02X ", vol_ti_ts[j], vol_ti_BLDC[j]);
+		int j = (ix + i) % BUFFER_SIZE;
+		sn_t[i] = vol_ti_ts[j];
+		sn_v[i] = vol_ti_BLDC[j];
 	}
-	Serial.println();
+	uint32_t t0 = sn_t[0];
+
+	Serial.print(ix);
+	Serial.print(":");
+	Serial.print(t0);
+	Serial.print("-");
+	for (int i = 0; i < BUFFER_SIZE; i++) {
+		int j = (ix + i) % BUFFER_SIZE;
+		Serial.printf(" %d,",j);
+		Serial.printf("%d,", (sn_t[i] - t0));
+		Serial.printf("%04X;", sn_v[i]);
+	}
 }

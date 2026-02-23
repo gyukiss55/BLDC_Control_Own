@@ -40,12 +40,12 @@ int fillBLDCSequence(int indexStart, uint32_t tsStart, uint32_t pulse, uint32_t 
 {
     int j = indexStart;
     for (int i = 0; i < 6; i++) {
-        tsStart += gap;
-        vol_ti_ts[j] = tsStart;
-        vol_ti_BLDC[j] = 0; // Clear state first
-        j = (j + 1) % BUFFER_SIZE;
+        //tsStart += gap;
+        //vol_ti_ts[j] = tsStart;
+        //vol_ti_BLDC[j] = 0; // Clear state first
+        //j = (j + 1) % BUFFER_SIZE;
 
-        tsStart += gap;
+        tsStart += gap + gap;
         vol_ti_ts[j] = tsStart;
         vol_ti_BLDC[j] = getBLDCState(i);
         j = (j + 1) % BUFFER_SIZE;
@@ -92,7 +92,8 @@ void BLDCControlLoop()
 	indexEnd = indexEnd % BUFFER_SIZE; // Ensure space for new sequence
     uint32_t lastTS = 0;
     if (indexStart != indexEnd) {
-        lastTS = vol_ti_ts[(indexEnd + BUFFER_SIZE - 1) % BUFFER_SIZE];
+		int indexLast = (indexStart + BUFFER_SIZE - 1) % BUFFER_SIZE;
+        lastTS = vol_ti_ts[indexLast];
     }
 
     uint32_t nowTS = micros();
@@ -100,10 +101,16 @@ void BLDCControlLoop()
         lastTS = nowTS;
     }
     if (debugFlag) {
+		static uint32_t lastStartMS = 0;
+        if (lastStartMS == 0) {
+            lastStartMS = lastTS;
+        }
         Serial.print("Filling BLDC sequence at index:");
         Serial.print(indexStart); Serial.print(",");
-        Serial.print(lastTS);; Serial.print(",");
-        Serial.println(nowTS);
+        Serial.print(lastTS); Serial.print(", delta:");
+        Serial.print(lastTS - lastStartMS); Serial.print(",");
+        Serial.println(vol_ti_ix_wr);
+		lastStartMS = lastTS;
 	}
     vol_ti_ix_wr = fillBLDCSequence(indexStart, lastTS, pulseMS * 1000, (periodMS - pulseMS) * (1000 / 2));
     numFillBLDC++;
