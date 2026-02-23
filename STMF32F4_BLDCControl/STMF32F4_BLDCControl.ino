@@ -14,22 +14,22 @@ void setup() {
 
 	setupBLDCPort();
 
-    //setupBLDCExtInt();
+    setupBLDCExtInt();
 
-    //setupTimer();
+    setupTimer();
 
     setupSerial();
 }
 
 void loop() {
-    unitTest();
-    //loopNormal ();
+    //unitTest();
+    loopNormal ();
 }
 
 void unitTest()
 {
     Serial.print(micros());
-    Serial.println(" - unit test...");
+    Serial.println(" - unit test v1.1...");
     unitTestBLDCPort();
     //unitTestBLDCExtInt();
     //unitTestBLDCTimer();
@@ -42,6 +42,8 @@ void loopNormal()
     BLDCControlLoop();
     SerialOutputLoop();
     SerialInputLoop();
+    
+    loopTimerFunction();
 
     BlinkLed();
 }

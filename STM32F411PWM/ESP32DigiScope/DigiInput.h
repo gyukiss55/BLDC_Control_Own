@@ -1,3 +1,0 @@
-
-void setupDigiInput();
-void loopDigiInput();

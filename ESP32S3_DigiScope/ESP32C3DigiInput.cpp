@@ -34,7 +34,8 @@ void readDigitalInput(int num)
 	for (int pin = 0;  digitInputPins[pin] >= 0 && pin < num; pin++) {
 		inputStates[pin] = digitalRead(digitInputPins[pin]);
 		str += String(inputStates[pin]);
-		str += ',';
+		if (pin < num - 1)
+			str += ',';
 	}
 	bool changed = false;
 	for (int i = 0; i < num; i++) {
@@ -44,7 +45,7 @@ void readDigitalInput(int num)
 			//setRGB(inputStates[0] ? 255 : 0, inputStates[1] ? 255 : 0, inputStates[2] ? 255 : 0);
 		}
 	}
-	str += changed ? String("1") : String("0");
+	//str += changed ? String("1") : String("0");
 	Serial.println(str);
 	if (changed)
 	{

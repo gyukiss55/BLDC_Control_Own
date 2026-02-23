@@ -6,7 +6,7 @@
 void setup() {
 	Serial.begin(115200);
 	delay(1000); // Wait for serial to initialize
-	Serial.println("ESP32C3 Digital Scope Example V0.81");
+	Serial.println("ESP32C3 Digital Scope Example V0.82");
 	setupESP32S3RGB();
 	unitTestRGB();
 	setRGB(255, 0, 0); // Set initial color to red
@@ -25,7 +25,7 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
 	loopDigitalOutput(1000); // Change output state every 200ms
-	loopDigitalInput(200);
+	loopDigitalInput(50);
 	//BlinkLed();
 }
 

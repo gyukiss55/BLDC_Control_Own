@@ -9,7 +9,7 @@ void setupSerial()
 {
 	Serial.begin(115200);
 	delay(2000);
-	Serial.println("STM32F411CE start...");
+	Serial.println("STM32F411CE start Ver 0.81 ...");
 	Serial.printf("%x, %x, %x, %x, %x, %x,\n",
 		BLDC_MASKAHBL, BLDC_MASKAHCL,
 		BLDC_MASKBHCL, BLDC_MASKBHAL,

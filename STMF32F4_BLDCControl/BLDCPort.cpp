@@ -14,6 +14,10 @@ void setupBLDCPort()
 	pinMode(BLDC_PINBL, OUTPUT);
 	pinMode(BLDC_PINCH, OUTPUT);
 	pinMode(BLDC_PINCL, OUTPUT);
+
+	pinMode(BLDC_PINTT, OUTPUT);
+	digitalWrite(BLDC_PINTT, LOW);
+
 	clearBLDCPort();
 }
 
@@ -25,7 +29,6 @@ void clearBLDCPort()
 	digitalWrite(BLDC_PINBL, LOW);
 	digitalWrite(BLDC_PINCH, LOW);
 	digitalWrite(BLDC_PINCL, LOW);
-	clearBLDCPort();
 }
 
 void unitTestBLDCPort()

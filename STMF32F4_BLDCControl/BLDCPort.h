@@ -22,5 +22,8 @@
 #define BLDC_PINCH PB8
 #define BLDC_PINCL PB9
 
+#define BLDC_PINTT PA8
+//PA9, PA10 UART1 TX/RX
+
 void setupBLDCPort();
 void unitTestBLDCPort();

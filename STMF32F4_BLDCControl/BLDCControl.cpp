@@ -78,8 +78,7 @@ void UnitTest()
 
 void BLDCControlLoop()
 {
-    UnitTest();
-
+	static bool debugFlag   = false;
     if (pulseMS <= 0 || pulseMS > periodMS)
         return; // No pulse, skip control
     periodMSPrev = periodMS;
@@ -88,8 +87,9 @@ void BLDCControlLoop()
     int indexEnd = vol_ti_ix_rd;
     if (indexEnd <= indexStart)
         indexEnd += BUFFER_SIZE; // Handle wrap-around
-    if (indexEnd - indexStart < 6 * 3)
+    if (indexEnd - indexStart < (6 * 3 + 2))
         return;
+	indexEnd = indexEnd % BUFFER_SIZE; // Ensure space for new sequence
     uint32_t lastTS = 0;
     if (indexStart != indexEnd) {
         lastTS = vol_ti_ts[(indexEnd + BUFFER_SIZE - 1) % BUFFER_SIZE];
@@ -99,6 +99,12 @@ void BLDCControlLoop()
     if (nowTS > lastTS) {
         lastTS = nowTS;
     }
+    if (debugFlag) {
+        Serial.print("Filling BLDC sequence at index:");
+        Serial.print(indexStart); Serial.print(",");
+        Serial.print(lastTS);; Serial.print(",");
+        Serial.println(nowTS);
+	}
     vol_ti_ix_wr = fillBLDCSequence(indexStart, lastTS, pulseMS * 1000, (periodMS - pulseMS) * (1000 / 2));
     numFillBLDC++;
 

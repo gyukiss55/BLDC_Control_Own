@@ -1,6 +1,8 @@
 // BlinkLed.cpp
 #include "BlinkLed.h"
 
+#define LED_BUILTIN 48
+
 void setupBlinkLed()
 {
 	pinMode(LED_BUILTIN, OUTPUT);

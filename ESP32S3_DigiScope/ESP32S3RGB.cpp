@@ -39,9 +39,9 @@ void unitTestRGB() {
 				delay(100);
 				Serial.print("RGB test:");
 				Serial.print(r);
-				Serial.print(",);
+				Serial.print(",");
 				Serial.print(g);
-				Serial.print(",);
+				Serial.print(",");
 				Serial.println(b);
 
 			}
