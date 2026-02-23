@@ -1,5 +1,10 @@
 // BLDCLed.cpp
 #include "BLDCLed.h"
+void setupBLDCLed()
+{
+  pinMode(LED_BUILTIN, OUTPUT);
+  digitalWrite(LED_BUILTIN, LOW);
+}
 
 void BlinkLed()
 {

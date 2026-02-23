@@ -4,7 +4,7 @@
 
 void setupBLDCPort()
 {
-	pinMode(LED_BUILTIN, OUTPUT);
+
 
 	// BLDC outputs PB12-PB15,PB8,PB9 [web:1]
 	pinMode(PB12, OUTPUT);

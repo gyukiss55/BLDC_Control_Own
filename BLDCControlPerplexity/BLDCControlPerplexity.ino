@@ -10,22 +10,24 @@
 #include "BLDCControl.h"
 #include "BLDCLed.h"
 
-void setup() {
+void setup()
+{
+    setupBLDCLed();
 
 	setupBLDCPort();
 
-    setupBLDCExtInt();
+    //setupBLDCExtInt();
 
-    setupTimer();
+    //setupTimer();
 
-    setupSerial();
+    //setupSerial();
 }
 
-void loop() {
-
-    BLDCControlLoop();
-    SerialOutputLoop();
+void loop()
+{
     SerialInputLoop();
+    //BLDCControlLoop();
+    //SerialOutputLoop();
 
     BlinkLed();
 }
