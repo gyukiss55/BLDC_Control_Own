@@ -12,7 +12,7 @@ int colorCombinations[MAX_COLOR_COMBINATION][3] = {
 	{0, 255, 255}  // Cyan
 };
 
-int digitInputPins[6] = { 47, 21, 45, 19, 20, 48 }; // Example GPIO pins for digital input
+int digitInputPins[6] = { 40, 41, 42, 15, 16, 17 }; // Example GPIO pins for digital input
 bool inputStates[6] = { 0 }; // Store the state of each input pin
 bool inputStatesLast[6] = { 0 }; // Store the state of each input pin
 uint32_t lastInputChangeTS = 0;

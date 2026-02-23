@@ -6,11 +6,19 @@
 void setup() {
 	Serial.begin(115200);
 	delay(1000); // Wait for serial to initialize
-	Serial.println("ESP32C3 Digital Scope Example");
-
+	Serial.println("ESP32C3 Digital Scope Example V0.81");
 	setupESP32S3RGB();
+	unitTestRGB();
+	setRGB(255, 0, 0); // Set initial color to red
+	delay(1000);
+		
 	setupESP32C3DigiInput();
+	setRGB(0, 0, 255); // Set initial color to blue
+	delay(1000);
+
 	setupESP32C3DigiOutput();
+	setRGB(0, 255, 0); // Set initial color to green
+	delay(1000);
 
 }
 

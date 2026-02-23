@@ -3,7 +3,7 @@
 #include "ESP32S3RGB.h"
 
 
-int digitOutputPins[] = { 37, 38, 39, 40, 41, 42}; // Example GPIO pins for digital input
+int digitOutputPins[] = { 35, 36, 37, 38, 39, 18}; // Example GPIO pins for digital input
 
 void setupESP32C3DigiOutput()
 {

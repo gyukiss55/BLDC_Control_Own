@@ -69,7 +69,10 @@ void UnitTest()
 		nowTS = nowTS - (nowTS % 1000); // Align to 1ms boundary
         int indexStart = vol_ti_ix_wr;
         int indexEnd = fillBLDCSequence(indexStart, nowTS, 1000, 500);
-        Serial.printf("Filled BLDC sequence from index %d to %d\n", indexStart, indexEnd);
+        Serial.print("Filled BLDC sequence from index");
+        Serial.print(indexStart);
+        Serial.print(",");
+        Serial.println(indexEnd);
 	}
 }
 
