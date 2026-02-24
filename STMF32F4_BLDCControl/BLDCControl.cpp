@@ -112,7 +112,7 @@ void BLDCControlLoop()
         Serial.println(vol_ti_ix_wr);
 		lastStartMS = lastTS;
 	}
-    vol_ti_ix_wr = fillBLDCSequence(indexStart, lastTS, pulseMS * 1000, (periodMS - pulseMS) * (1000 / 2));
+    vol_ti_ix_wr = fillBLDCSequence(indexStart, lastTS, pulseMS * 10, (periodMS - pulseMS) * (10 / 2));
     numFillBLDC++;
 
 }
