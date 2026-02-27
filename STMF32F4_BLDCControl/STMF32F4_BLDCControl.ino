@@ -23,12 +23,31 @@ void setup()
     //setupSerial();
 }
 
-void loop()
+void loop() {
+    //unitTest();
+    loopNormal ();
+}
+
+void unitTest()
 {
+    Serial.print(micros());
+    Serial.println(" - unit test v1.1...");
+    unitTestBLDCPort();
+    //unitTestBLDCExtInt();
+    //unitTestBLDCTimer();
+    //unitTestSerial();
+    BlinkLed();
+}
+
+void loopNormal()
+{
+    BLDCControlLoop();
+    SerialOutputLoop();
     SerialInputLoop();
-    //BLDCControlLoop();
-    //SerialOutputLoop();
+    
+    loopTimerFunction();
 
     BlinkLed();
 }
+
 

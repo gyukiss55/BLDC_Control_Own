@@ -1,0 +1,4 @@
+.git/
+.vs/
+BLDC_Control_Own\.vs
+BLDC_Control_Own\build

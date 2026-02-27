@@ -2,3 +2,5 @@
 #include <Arduino.h>
 
 void setupTimer();
+
+void loopTimerFunction();

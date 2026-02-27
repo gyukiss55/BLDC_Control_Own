@@ -7,10 +7,9 @@ void setup() {
 	Serial.begin(115200);
 	delay(1000); // Wait for serial to initialize
 	Serial.println("ESP32C3 Digital Scope Example");
-
+		
 	//setupESP32S3RGB();
 	setupESP32C3DigiInput();
-	//setupESP32C3DigiOutput();
 
 }
 
