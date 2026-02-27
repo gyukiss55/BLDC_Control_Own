@@ -13,13 +13,16 @@
 #define CH 25
 #define CL 33
 
-#define PWM_PIN 32
+#define PWM_PIN 22
 
 // ================= PWM CONFIG =================
 
-#define PWM_CHANNEL 0
+#define PWM_CHANNEL 32
 #define PWM_TIMER_BITS 10      // 10-bit resolution (1024 steps)
-#define PWM_FREQ 100000        // 100 kHz (10 µs period)
+#define PWM_FREQ 50000        // 50 kHz (20 µs period)
+
+#define PWM_LOW_TIMER_BITS 8      // 8-bit resolution (256 steps)
+#define PWM_LOW_FREQ 200000        // 200 kHz (5 µs period)
 
 // ================= TIMER =================
 
@@ -28,6 +31,8 @@ portMUX_TYPE timerMux = portMUX_INITIALIZER_UNLOCKED;
 
 volatile uint8_t phase = 0;
 volatile uint32_t phasePeriod = 1000000;  // default 10000000us
+
+int portPins[] = {AH,AL,BH,BL,CH,CL};
 
 // ================= PHASE CONTROL =================
 
@@ -42,54 +47,54 @@ void IRAM_ATTR setPhase(uint8_t p)
         (1UL << CH) |
         (1UL << CL));
     */
-    digitalWrite(AH, LOW);
-  digitalWrite(AL, LOW);
-  digitalWrite(BH, LOW);
-  digitalWrite(BL, LOW);
-  digitalWrite(CH, LOW);
-  digitalWrite(CL, LOW);
+	digitalWrite(AH, LOW);
+	digitalWrite(AL, LOW);
+	digitalWrite(BH, LOW);
+	digitalWrite(BL, LOW);
+	digitalWrite(CH, LOW);
+	digitalWrite(CL, LOW);
 
-    switch (p)
-    {
-    case 0: 
-    digitalWrite(AH, LOW);
-    digitalWrite(BL, LOW);
-    break; // AH-BL
-    case 1: 
-        digitalWrite(AH, LOW);
-    digitalWrite(BL, LOW);
-    break; // AH-CL
-    case 2: 
-        digitalWrite(AH, LOW);
-    digitalWrite(BL, LOW);
-     break; // BH-CL
-    case 3: 
-        digitalWrite(AH, LOW);
-    digitalWrite(BL, LOW);
-break; // BH-AL
-    case 4: 
-        digitalWrite(AH, LOW);
-    digitalWrite(BL, LOW);
- break; // CH-AL
-    case 5: 
-        digitalWrite(AH, LOW);
-    digitalWrite(BL, LOW);
- break; // CH-BL
-    }
+	switch (p)
+	{
+	case 0:
+		digitalWrite(AH, HIGH);
+		digitalWrite(BL, HIGH);
+		break; // AH-BL
+	case 1:
+		digitalWrite(AH, HIGH);
+		digitalWrite(CL, HIGH);
+		break; // AH-CL
+	case 2:
+		digitalWrite(BH, HIGH);
+		digitalWrite(CL, HIGH);
+		break; // BH-CL
+	case 3:
+		digitalWrite(BH, HIGH);
+		digitalWrite(AL, HIGH);
+		break; // BH-AL
+	case 4:
+		digitalWrite(CH, HIGH);
+		digitalWrite(AL, HIGH);
+		break; // CH-AL
+	case 5:
+		digitalWrite(CH, HIGH);
+		digitalWrite(BL, HIGH);
+		break; // CH-BL
+	}
 }
 
 // ================= TIMER ISR =================
 
 void IRAM_ATTR onBLDCTimer()
 {
-    portENTER_CRITICAL_ISR(&timerMux);
+	portENTER_CRITICAL_ISR(&timerMux);
 
-    phase++;
-    if (phase >= 6) phase = 0;
+	phase++;
+	if (phase >= 6) phase = 0;
 
-    setPhase(phase);
+	setPhase(phase);
 
-    portEXIT_CRITICAL_ISR(&timerMux);
+	portEXIT_CRITICAL_ISR(&timerMux);
 }
 
 // ================= PUBLIC FUNCTIONS =================
@@ -114,12 +119,12 @@ void setupBLDCPort()
     // ===== PWM Setup =====
     ledcAttach(PWM_CHANNEL, PWM_FREQ, PWM_TIMER_BITS);
   
-    ledcWrite(PWM_CHANNEL, 0);  // 0 duty
+    ledcWrite(PWM_CHANNEL, 1);  // 0 duty
 
     // Set timer frequency to 1Mhz
     bldcTimer = timerBegin(1000000);
     timerAttachInterrupt(bldcTimer, &onBLDCTimer);
-    timerAlarm(bldcTimer, 10000000, true, 0);
+    timerAlarm(bldcTimer, 100000, true, 0);
 
 }
 
@@ -145,4 +150,21 @@ int setBLDCPWM(int duty)
     ledcWrite(PWM_CHANNEL, duty);
 
     return 0;
+}
+
+void loopBLDCPort()
+{
+    static uint32_t tsLast = 0;
+    uint32_t tsNow = millis();
+    if (tsNow - tsLast >= 100) {
+        tsLast +=1000;
+        String str = String (tsNow) + "- ";
+        str = String(phase) + ",";
+        for(int i = 0; i < 6; i++) {
+            str+= String (digitalRead(portPins[i]));
+            if (i < 5)
+                str+= ",";
+        }
+        Serial.println(str);
+    }
 }

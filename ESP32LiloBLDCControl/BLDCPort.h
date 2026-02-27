@@ -6,5 +6,6 @@
 void setupBLDCPort();
 int setBLDCPeriod(int usec);
 int setBLDCPWM(int duty);
+void loopBLDCPort();
 
 #endif

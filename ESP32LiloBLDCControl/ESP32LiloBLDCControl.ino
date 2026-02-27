@@ -1,9 +1,9 @@
 #include <Arduino.h>
 #include "BLDCPort.h"
+#include "BLDCSerial.h"
 
 void setup() {
-    Serial.begin(115200);
-	delay(1000); // Wait for serial to initialize
+    setupSerial();
     setupBLDCPort();
 
     setBLDCPeriod(1000000);   // 1000ms per commutation step
@@ -13,4 +13,6 @@ void setup() {
 
 void loop() {
     // Not used (FreeRTOS handles everything)
+    loopBLDCPort ();
+    SerialInputLoop();
 }
