@@ -6,12 +6,12 @@
 
 // ================= GPIO DEFINITIONS =================
 
-#define AH 12
-#define AL 14
+#define AH 26
+#define AL 33
 #define BH 27
-#define BL 26
-#define CH 25
-#define CL 33
+#define BL 25
+#define CH 12
+#define CL 14
 
 #define PWM_PIN 22
 
@@ -19,7 +19,8 @@
 
 #define PWM_CHANNEL 32
 #define PWM_TIMER_BITS 10      // 10-bit resolution (1024 steps)
-#define PWM_FREQ 50000        // 50 kHz (20 µs period)
+//#define PWM_FREQ 50000        // 50 kHz (20 µs period)
+#define PWM_FREQ 5000        // 50 kHz (500 µs period)
 
 #define PWM_LOW_TIMER_BITS 8      // 8-bit resolution (256 steps)
 #define PWM_LOW_FREQ 200000        // 200 kHz (5 µs period)
