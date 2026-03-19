@@ -4,8 +4,7 @@ const int SWITCH_1_R_PIN = 10;
 
 bool ledState = false;
 bool lastLedState = false;
-bool lastSwitchState1 = false;
-bool lastSwitchDir1 = false;
+
 
 unsigned long lastTime = 1;
 const unsigned long interval2 = 200;
@@ -26,45 +25,49 @@ void setup() {
   // lastSwitchDir1 = digitalRead(SWITCH_1_R_PIN);
 }
 
-void ChangeState (bool switch, bool rightNotLeft = false) {
+void ChangeState (bool switchSt, bool rightNotLeft = false) {
    ledState = !ledState;
     
     digitalWrite(LED_PIN, ledState);
-    if(switch) {
-      if(switch) {
-      }
-      digitalWrite(SWITCH_1_L_PIN, ledState);
-    } else {
-      digitalWrite(SWITCH_1_L_PIN, LOW);
-      digitalWrite(SWITCH_1_R_PIN, LOW);
+    digitalWrite(SWITCH_1_L_PIN, LOW);
+    digitalWrite(SWITCH_1_R_PIN, LOW);
+    if(switchSt) {
+      if(rightNotLeft)
+        digitalWrite(SWITCH_1_R_PIN, ledState);
+      else
+        digitalWrite(SWITCH_1_L_PIN, ledState);
     }
-    
 }
 
 void loop() {
   unsigned long now = millis();
+  static bool leftSwitch = false;
 
   if (!ledState && ((now - lastTime) >= interval1)) {
+    leftSwitch = !leftSwitch;
     lastTime = lastTime + interval1;
-    ChangeState ();
+    ChangeState (true, leftSwitch);
  
   }
   if (ledState && ((now - lastTime) >= interval2)) {
     lastTime = lastTime + interval2;
-    ChangeState ();
+    ChangeState (false, leftSwitch);
  
   }
 
   bool currentLed = digitalRead(LED_PIN);
-  bool currentGpio = digitalRead(GPIO_PIN);
+  bool currentLeft = digitalRead(SWITCH_1_L_PIN);
+  bool currentRight = digitalRead(SWITCH_1_R_PIN);
 
-  if (currentLed != lastLedState || currentGpio != lastGpioState) {
+  if (currentLed != lastLedState) {
     Serial.print("LED: ");
     Serial.print(currentLed ? "HIGH" : "LOW");
-    Serial.print("  GPIO12: ");
-    Serial.println(currentGpio ? "HIGH" : "LOW");
+    Serial.print("  left1: ");
+    Serial.println(currentLeft ? "HIGH" : "LOW");
+    Serial.print("  left1: ");
+    Serial.println(currentRight ? "HIGH" : "LOW");
 
     lastLedState = currentLed;
-    lastGpioState = currentGpio;
+
   }
 }

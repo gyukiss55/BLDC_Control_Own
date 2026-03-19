@@ -30,6 +30,7 @@ void TimerHandler(void) {
             else
             {
                 digitalWrite(PB12, LOW);
+            }
     }
 }
 
