@@ -1,13 +1,13 @@
 const int LED_PIN = 25;     // Built-in LED for Rpi Pico
 const int SWITCH_1_L_PIN = 11;
 const int SWITCH_1_R_PIN = 10;
-const int speed = 128;
+const int speed = 128+64+32+16;
 bool ledState = false;
 bool lastLedState = false;
 
 
 unsigned long lastTime = 1;
-const unsigned long interval2 = 500;
+const unsigned long interval2 = 100;
 const unsigned long interval1 = 1500;
 
 void setup() {

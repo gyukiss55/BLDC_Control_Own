@@ -1,0 +1,43 @@
+//----------------------- Wemos Lolin32 Lite BLDC control ---------//
+Arduino IDE, Wemos Lolin32 Lite project control BLDC
+ GPIO12 PWM output
+ GPIO14 BLDC AH enable
+ GPIO25 BLDC AL enable
+ GPIO32 BLDC BH enable
+ GPIO33 BLDC BL enable
+ GPIO26 BLDC CH enable
+ GPIO27 BLDC CL enable
+ Serial baudrate 115200
+ 
+ GPIO13 BLDC digital input of COMP1
+ GPIO15 BLDC digital input of COMP2
+ GPIO2 BLDC digital input of COMP3
+ 
+ External interrupt for both (rising, falling) COMP1, COMP2, COMP3
+ 
+ global parameters 
+ uint32_t pwmDuty = 0;
+ uint32_t bldcPeriod = 1000; // millisec  
+ uint32_t tsExtInt[32];
+ byte stateExtInt[32];
+ int extIntIndex = 0;
+  uint32_t extIntCounter = 0;
+   
+ PWM output period 1kHz, resolution 1024
+ 
+ use timer interrupt to control 6 state of BLDC by output  AH, AL, ..., CL using bldcPeriod
+
+exteranl interrupt function:
+{
+extIntCounter++;
+tsExtInt[extIntIndex] = micros();
+stateExtInt[extIntIndex] = GPIO13 ? 1 : 0 | GPIO15 ? 2 : 0 | GPIO2 ? 4 : 0
+extIntIndex = (extIntIndex + 1) % 32;
+}
+
+Serial input handle the next command format:
+p:<bldcPeriod in millisec>
+update bldcPeriod after next timer interrupt
+d:<pwmDuty>
+update pwmDuty after next timer interrupt
+loop in every second dump  millisec, pwmDuty, bldcPeriod 
