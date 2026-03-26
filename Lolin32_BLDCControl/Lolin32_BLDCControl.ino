@@ -13,7 +13,7 @@ void setup()
 
     setupBLDCControl();
 
-    //setupWebServer();
+    setupWebServer();
     Serial.println("BLDC Control Setup complete. #V1.0.");
 }
 
@@ -21,6 +21,6 @@ void setup()
 void loop()
 {
     //loopBLDCControl();
-    //loopWebServer();
+    loopWebServer();
     loopSerial();
 }

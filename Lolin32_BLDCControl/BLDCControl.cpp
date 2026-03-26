@@ -19,10 +19,10 @@
 #define COMP3_PIN 2
 
 // ---------------- GLOBALS ----------------
-volatile uint32_t pwmDuty = 10;
+volatile uint32_t pwmDuty = 0;
 volatile uint32_t bldcPeriod = 50; // ms
 
-volatile uint32_t newPwmDuty = 10;
+volatile uint32_t newPwmDuty = 0;
 volatile uint32_t newBldcPeriod = 50;
 volatile bool updatePending = false;
 

@@ -49,6 +49,7 @@ String htmlPage() {
 
   <button onclick="change('duty', 1)">Duty +</button>
   <button onclick="change('duty', -1)">Duty -</button>
+  <button onclick="reset('duty')">Reset Duty</button>
 
 <script>
 function sendUpdate() {
@@ -69,6 +70,13 @@ function change(id, delta) {
   if (val > max) val = max;
 
   el.value = val;
+  sendUpdate();
+}
+
+function reset(id) {
+  let el = document.getElementById(id);
+  let min = parseInt(el.min);
+  el.value = min;
   sendUpdate();
 }
 
