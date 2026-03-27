@@ -41,3 +41,18 @@ update bldcPeriod after next timer interrupt
 d:<pwmDuty>
 update pwmDuty after next timer interrupt
 loop in every second dump  millisec, pwmDuty, bldcPeriod 
+
+
+//----------------------- Wemos Lolin32 Signal ---------
+
+Arduino IDE, Wemos Lolin32 Lite project control analogue sign
+Query net global time
+refresh local time to i2c oled display D13-12864-I2C-BL 128 x 64
+format:
+yyyy.mm.dd
+hh.mm.ss
+GIO13,15 PWM output with the max frequency and 10 bit resolution
+GIO13 (sin (t/T1*2*Pi) + 1) * 500 where T1 = 1 milli second
+GIO13 (sin (t/T2*2*Pi) + 1) * 500 where T2 = 8/7 milli second
+get the sinus values from precalculated table
+ 
