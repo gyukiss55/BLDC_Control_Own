@@ -31,7 +31,7 @@ String htmlPage() {
   <h2>BLDC Web Service</h2>
 
   <label>BLDC Period:</label><br>
-  <input type="number" id="period" min="10" max="100" value=")rawliteral";
+  <input type="number" id="period" min="10" max="500" value=")rawliteral";
 
     page += String(period);   // <-- inject current value
 
@@ -104,7 +104,7 @@ void handleRoot() {
 void handleUpdate() {
     if (server.hasArg("period")) {
         int p = server.arg("period").toInt();
-        if (p >= 10 && p <= 100) {
+        if (p >= 10 && p <= 500) {
             period = p;
             setBLDCPeriod(period);
         }
