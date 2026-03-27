@@ -56,3 +56,19 @@ GIO13 (sin (t/T1*2*Pi) + 1) * 500 where T1 = 1 milli second
 GIO13 (sin (t/T2*2*Pi) + 1) * 500 where T2 = 8/7 milli second
 get the sinus values from precalculated table
  
+loop in every second dump  millisec, pwmDuty, bldcPeriod 
+
+//----------------------- Wemos Lolin32 Lite BLDC control Web server ---------//
+wemos lolin32 lite, Arduino IDE
+Create a webserver
+sending html with the next controls
+Label - BLDC Web Service
+label - "BLDC Period" , edit control integer in range 100-10, 100 initial, named "period"
+label - "PWM duty" , edit control integer in range 0-50, 0 initial, named "duty"
+button - "Period +" increment "period" edit control in the predefined range
+button - "Period -" decrement "period" edit control in the predefined range
+button - "Duty +" increment "duty" edit control in the predefined range
+button - "Duty -" decrement "duty" edit control in the predefined range
+Whenever any edit control change send a Get command to the server with next format:
+/<endpoint>?period=<period>&duty=<duty>
+Receiving client Get command, the server update period and duty value if they are in the predefined range

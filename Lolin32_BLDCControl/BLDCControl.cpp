@@ -20,10 +20,10 @@
 
 // ---------------- GLOBALS ----------------
 volatile uint32_t pwmDuty = 0;
-volatile uint32_t bldcPeriod = 50; // ms
+volatile uint32_t bldcPeriod = 200; // ms
 
 volatile uint32_t newPwmDuty = 0;
-volatile uint32_t newBldcPeriod = 50;
+volatile uint32_t newBldcPeriod = 200;
 volatile bool updatePending = false;
 
 const int driveCycle = 6 * 30;
@@ -45,7 +45,7 @@ portMUX_TYPE timerMux = portMUX_INITIALIZER_UNLOCKED;
 
 // PWM config
 
-const int pwmFreq = 50;
+const int pwmFreq = 1000;
 const int pwmResolution = 10; // 1024 steps
 
 // ---------------- BLDC COMMUTATION ----------------
