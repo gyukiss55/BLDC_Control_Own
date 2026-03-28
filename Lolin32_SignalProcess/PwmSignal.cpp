@@ -7,9 +7,14 @@
 #define PIN_PWM1 13
 #define PIN_PWM2 15
 
+
 //#define PWM_FREQ 80000
-#define PWM_FREQ 1000
+#define PWM_FREQ 50000
 #define PWM_RES 10
+
+const int MaxValuePWM = (1 << PWM_RES) - 1;
+int periodSign1 = 1181;
+int periodSign2 = 1321;
 
 int sinTable[90];
 
@@ -41,10 +46,10 @@ void pwmUpdate() {
     uint32_t t = micros();
 
     // T1 = 1 ms
-    float phase1 = (t % 1000) * 360.0 / 1000.0;
+    float phase1 = (t % periodSign1) * 360.0 / 1000.0;
 
     // T2 = 8/7 ms ≈ 1143 us
-    float phase2 = (t % 1143) * 360.0 / 1143.0;
+    float phase2 = (t % periodSign2) * 360.0 / 1143.0;
 
     int s1 = fastSin((int)phase1);
     int s2 = fastSin((int)phase2);
@@ -52,8 +57,8 @@ void pwmUpdate() {
     int pwm1 = (s1 + 1000) / 2;
     int pwm2 = (s2 + 1000) / 2;
 
-    pwm1 = map(pwm1, 0, 1000, 0, 1023);
-    pwm2 = map(pwm2, 0, 1000, 0, 1023);
+    pwm1 = map(pwm1, 0, 1000, 0, MaxValuePWM);
+    pwm2 = map(pwm2, 0, 1000, 0, MaxValuePWM);
 
     ledcWrite(PIN_PWM1, pwm1);
     ledcWrite(PIN_PWM2, pwm2);
