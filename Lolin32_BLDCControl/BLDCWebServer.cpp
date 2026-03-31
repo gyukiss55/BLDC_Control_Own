@@ -1,6 +1,7 @@
 // BLDCWebServer.cpp
 #include "BLDCWebServer.h"
 #include "BLDCControl.h"
+#include "BLDCCommon.h"
 
 #include <WiFi.h>
 #include <WebServer.h>
@@ -31,14 +32,22 @@ String htmlPage() {
   <h2>BLDC Web Service</h2>
 
   <label>BLDC Period:</label><br>
-  <input type="number" id="period" min="10" max="500" value=")rawliteral";
+  <input type="number" id="period" min="10" max=")rawliteral";
+
+    page += String(BLDC_PERIOD_MAX);
+
+    page += R"rawliteral(500" value=")rawliteral";
 
     page += String(period);   // <-- inject current value
 
     page += R"rawliteral("><br><br>
 
   <label>PWM duty:</label><br>
-  <input type="number" id="duty" min="0" max="50" value=")rawliteral";
+  <input type="number" id="duty" min="0" max=")rawliteral";
+
+    page += String(BLDC_DUTY_MAX);
+
+    page += R"rawliteral(" value=")rawliteral";
 
     page += String(duty);     // <-- inject current value
 

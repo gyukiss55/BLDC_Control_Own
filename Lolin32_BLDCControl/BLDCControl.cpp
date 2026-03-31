@@ -1,5 +1,6 @@
 // BLDCControl.cpp
 #include "BLDCControl.h"
+#include "BLDCCommon.h"
 #include <Arduino.h>
 
 // ---------------- PIN DEFINITIONS ----------------
@@ -20,10 +21,10 @@
 
 // ---------------- GLOBALS ----------------
 volatile uint32_t pwmDuty = 0;
-volatile uint32_t bldcPeriod = 200; // ms
+volatile uint32_t bldcPeriod = BLDC_PERIOD; // ms
 
 volatile uint32_t newPwmDuty = 0;
-volatile uint32_t newBldcPeriod = 200;
+volatile uint32_t newBldcPeriod = BLDC_PERIOD;
 volatile bool updatePending = false;
 
 const int driveCycle = 6 * 30;
@@ -140,8 +141,8 @@ void setupBLDCControl()
 
     // External interrupts
     attachInterrupt(COMP1_PIN, extInterruptHandler, CHANGE);
-    attachInterrupt(COMP2_PIN, extInterruptHandler, CHANGE);
-    attachInterrupt(COMP3_PIN, extInterruptHandler, CHANGE);
+    //attachInterrupt(COMP2_PIN, extInterruptHandler, CHANGE);
+    //attachInterrupt(COMP3_PIN, extInterruptHandler, CHANGE);
 
     // Timer setup
     timer = timerBegin(1000000); // 1 MHz timer
