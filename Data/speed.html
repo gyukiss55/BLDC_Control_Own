@@ -1,0 +1,20 @@
+<title>BLDC Throttle</title>
+</head>
+<body>
+
+<h2>Throttle Control</h2>
+
+<input type="range" min="1000" max="2000" value="1000" id="throttle" oninput="update(this.value)">
+<p>Throttle: <span id="value">1000</span> µs</p>
+
+<script>
+function update(val) {
+    document.getElementById("value").innerText = val;
+
+    fetch(`/set?period=20000&duty=${val}`)
+        .catch(err => console.error(err));
+}
+</script>
+
+</body>
+</html>
