@@ -20,7 +20,16 @@ void BLDCSerial_loop() {
         Serial.print(speed);
         Serial.print(" | Hall: ");
         Serial.print(hallCounter);
-        Serial.print(" | RPM: ");
-        Serial.println(hallCounterPerMin);
+        Serial.print(" | RPS: ");
+        Serial.print(hallCounterPerMin);
+        Serial.print(" | RPSV: ");
+		int firstIndex = hallCounterVectorIndex;
+        for(int i = 0; i < 60; i++) {
+			int j = (firstIndex + i) % 60;
+            Serial.print(hallCounterVector[j]);
+			if (i < 59)
+                Serial.print(",");
+		}
+        Serial.println();
     }
 }

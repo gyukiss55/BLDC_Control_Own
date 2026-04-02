@@ -6,6 +6,8 @@
 
 
 volatile int hallCounter = 0;
+volatile int hallCounterVector[60];
+volatile int hallCounterVectorIndex = 0;
 volatile int hallCounterPerMin = 0;
 
 int speed = 6553;   // 10% duty (ESC min)

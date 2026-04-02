@@ -4,6 +4,8 @@
 
 extern volatile int hallCounter;
 extern volatile int hallCounterPerMin;
+extern volatile int hallCounterVector[60];
+extern volatile int hallCounterVectorIndex;
 
 extern int speed;
 extern int speed1;
