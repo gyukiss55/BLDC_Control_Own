@@ -1,7 +1,7 @@
 #include <Arduino.h>
 
 const int pwmPin = 15;
-const int period_us = 20000; // 20 ms (50 Hz)
+const int period_us = 10000; // 10 ms (100 Hz)
 
 String inputString = "";
 bool inputComplete = false;
@@ -11,7 +11,7 @@ void setup() {
 
     pinMode(pwmPin, OUTPUT);
 
-    analogWriteFreq(50);        // 50 Hz
+    analogWriteFreq(100);        // 100 Hz
     analogWriteRange(65535);    // 16-bit resolution
 
     Serial.println("Enter pulse width in ms (e.g. 1.0 - 2.0):");

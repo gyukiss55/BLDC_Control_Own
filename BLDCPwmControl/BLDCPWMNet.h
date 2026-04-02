@@ -22,3 +22,4 @@ private:
 };
 
 #endif
+c:\work\git\BLDC_Control_Own\Lolin32_SignalProcess\Lolin32_SignalProcess.ino
