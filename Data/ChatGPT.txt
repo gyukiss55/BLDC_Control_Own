@@ -92,3 +92,26 @@ const int sclPin = 22; // SCL pin
 
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
+
+//----------------------- RPI Pico 2W BLDC control esc 30A with pwm ---------//
+
+ Arduino IDE, RPI Pico 2W, BLDC control, ESC 30A with pwm, RD 2205 BLDC motor, 5045 propeller, 3S LiPo battery, 30A ESC, 12V power supply
+ I need to control BLDC motor with ESC 30A using RPI Pico 2W and Arduino IDE.
+ which kind of hardwer do I need more?
+ Generate the next modules:
+ 1. BLDCPWMNet: a web server module to control BLDC motor speed and send a web page to client with the next controls:
+Label - BLDC Web Service
+Label - "HALL counter:<hallCounter>" counter/minute:<hallCounterPerMin>" (hallCounter, and hallCounterPerMin are global integer in Pico)
+label - "BLDC speed:" , edit control integer in range 6553-13107 and 6553 initial value, named "speed"
+label - "BLDC speed 1:" , edit control integer in range 6553-8518, 6553 initial, named "speed1"
+button - "Speed +" increment "speed" edit control in the predefined range
+button - "Speed -" decrement "speed" edit control in the predefined range
+button - "Speed +10" +=10 "speed" edit control in the predefined range
+button - "Speed -10" -=10 "speed" edit control in the predefined range
+button - "Reset" set 6553 "speed" edit control 
+button - "Speed 1" set "speed" edit control = "speed1" edit control 
+Whenever any edit control "speed" change send a Get command to the server with next format:
+/<endpoint>?Speed=<speed>
+ 2. BLDCPWMControl: a module to control BLDC motor speed by outputting PWM signal to GP15 to ESC 30A, receiving speed value from BLDCPWMNet module
+ 3. BLDCExternalInterrupt: a module to handle external interrupts from BLDC motor sensors, counting the number of interrupts "int hallCounter" and measuring the rotation "int hallCounterPerMin" of bldc motoz on GP13
+ 4. BLDCSerial: module sends current status of "speed", "hallCounter", "hallCounterPerMin" in every second.
