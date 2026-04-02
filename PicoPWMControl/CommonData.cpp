@@ -9,5 +9,5 @@ volatile int hallCounter = 0;
 volatile int hallCounterPerMin = 0;
 
 int speed = 6553;   // 10% duty (ESC min)
-int speed1 = 6553;
+int speed1 = 7980;
 
