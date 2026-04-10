@@ -115,3 +115,25 @@ Whenever any edit control "speed" change send a Get command to the server with n
  2. BLDCPWMControl: a module to control BLDC motor speed by outputting PWM signal to GP15 to ESC 30A, receiving speed value from BLDCPWMNet module
  3. BLDCExternalInterrupt: a module to handle external interrupts from BLDC motor sensors, counting the number of interrupts "int hallCounter" and measuring the rotation "int hallCounterPerMin" of bldc motoz on GP13
  4. BLDCSerial: module sends current status of "speed", "hallCounter", "hallCounterPerMin" in every second.
+
+
+///////////****************** PICO W, GIRO, MAG, GPS *********************//////////////////////////
+Arduino IDE, RPI PICO W, MPU-6500M, BMP-280, GY-NE06MV2
+pico GP20-SDA, GP21-SCL, GP0-TX, GP1-RX, GP10,11,12,13 - PWM-1,2,3,4
+MPU-6500M, BMP-280 has I2C connection (GP20-SDA, GP21-SCL)
+GY-NE06MV2 has UART connection (GP0-TX, GP1-RX)
+PWM period 100Hz, duty in range 10%-20% (1ms-2ms)
+Web server
+show the current status of MPU-6500M, BMP-280, GY-NE06MV2 and PWM values
+Moduls:
+1. PicoDronePWM.c
+controls the PWM 1-4 
+2. PicoDroneGAM.c
+handles MPU-6500M, BMP-280 and interface of query of GYRO, ACCE, MAGN, status
+3. PicoDroneGPS.c
+handles GY-NE06MV2 and interface of query of GPS status
+4. PicoDroneWeb.c
+generate WebServer and handle next command (optional if aall the 4 is given):
+ ?p<PWM channel>=<PWM pulse in micro sec in range 1000-2000>,p<PWM channel>=<PWM pulse in micro sec in range 1000-2000>,p<PWM channel>=<PWM pulse in micro sec in range 1000-2000>,p<PWM channel>=<PWM pulse in micro sec in range 1000-2000>
+5. PicoDroneSerial.c
+Dump current status of PWM, MPU-6500M, BMP-280, GY-NE06MV2, in every second.
