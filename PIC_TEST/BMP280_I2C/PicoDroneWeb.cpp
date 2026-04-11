@@ -4,6 +4,8 @@
 #include <Arduino.h>
 #include <WiFi.h>
 
+#include "DroneData.h"
+
 const char* ssid = "ASUS_98_2G";
 const char* password = "LiDoDa#959285$";
 
@@ -17,7 +19,7 @@ extern GPS_Data gps;
 
 void PicoDroneWeb_init()
 {
-    WiFi.begin(ssid, pass);
+    WiFi.begin(ssid, password);
     while (WiFi.status() != WL_CONNECTED) delay(500);
 
     server.begin();

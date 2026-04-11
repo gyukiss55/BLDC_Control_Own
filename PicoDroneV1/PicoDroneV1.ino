@@ -17,13 +17,13 @@ void setup() {
   PicoDronePWM_init();
   PicoDroneGAM_init();
   PicoDroneGPS_init();
-  PicoDroneWEB_init();
+  PicoDroneWeb_init();
   Serial.println("PicoDrone V0.1 setup end");
 }
 
 void loop() {
   PicoDroneSerial_loop();
   PicoDroneGPS_update();
-  PicoDroneGAM_update();
+  PicoDroneGAM_update(false);
   PicoDroneWeb_loop();
 }

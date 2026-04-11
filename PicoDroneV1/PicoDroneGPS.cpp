@@ -1,35 +1,24 @@
 // PicoDroneGPS.c
-#include "PicoDroneGPS.h"
 
 #include <Arduino.h>
-#include <HardwareSerial.h>
-
-HardwareSerial GPS(0);
-
-typedef struct {
-    float lat;
-    float lon;
-    int sats;
-    bool fix;
-} GPS_Data;
-
-GPS_Data gps;
+#include "PicoDroneGPS.h"
+#include "DroneData.h"
 
 unsigned long lastUpdate = 0;
 
 void PicoDroneGPS_init()
 {
-    GPS.setTX(0);
-    GPS.setRX(1);
-    GPS.begin(9600);
+    Serial1.setTX(0);
+    Serial1.setRX(1);
+    Serial1.begin(9600);
 }
 
 void PicoDroneGPS_update()
 {
     if (millis() - lastUpdate < 2000) return;
-    while (GPS.available())
+    while (Serial1.available())
     {
-        String line = GPS.readStringUntil('\n');
+        String line = Serial1.readStringUntil('\n');
 
         if (line.startsWith("$GPGGA"))
         {
