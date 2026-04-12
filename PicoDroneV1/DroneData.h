@@ -12,10 +12,16 @@ typedef struct {
 } GAM_Data;
 
 typedef struct {
+	uint32_t timestamp;
     float lat;
     float lon;
+    float alt;
     int sats;
     bool fix;
+    String time;
+    String date;
+    String logDataN[10];
+    int logDataI;
 } GPS_Data;
 
 extern GPS_Data gps;

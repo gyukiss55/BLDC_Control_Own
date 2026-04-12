@@ -6,7 +6,9 @@
 #include "PicoDroneSerial.h"
 #include "PicoDronePWM.h"
 #include "PicoDroneWeb.h"
-#include "PicoDroneGAM.h"
+#include "PicoDroneWire.h"
+#include "PicoDroneMPU6500.h"
+#include "PicoDroneBMP280.h"
 #include "PicoDroneGPS.h"
 
 void setup() {
@@ -15,7 +17,11 @@ void setup() {
   Serial.println("PicoDrone V0.1 setup start");
   PicoDroneSerial_init();
   PicoDronePWM_init();
-  PicoDroneGAM_init();
+
+  PicoDroneWire_init();
+  PicoDroneMPU6500_init();
+  PicoDroneBMP280_init();
+
   PicoDroneGPS_init();
   PicoDroneWeb_init();
   Serial.println("PicoDrone V0.1 setup end");
@@ -24,6 +30,7 @@ void setup() {
 void loop() {
   PicoDroneSerial_loop();
   PicoDroneGPS_update();
-  PicoDroneGAM_update(false);
+  PicoDroneMPU6500_update(false);
+  PicoDroneBMP280_update(false);
   PicoDroneWeb_loop();
 }

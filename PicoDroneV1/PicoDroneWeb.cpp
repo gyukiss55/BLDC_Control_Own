@@ -23,7 +23,12 @@ float p_temp1 = 25;
 float p_temp2 = 26;
 float p_lat = 47.0;
 float p_long = 19.0;
+float p_altgps = 0.0;
 int   p_satNum = 10;
+String p_timeGPS = "";
+String p_dateGPS = "";
+uint32_t p_timestamp = 0;
+String p_logGPS = "";
 
 // ==== PWM VALUES ====
 int p_pwm1 = 1000, p_pwm2 = 1000, p_pwm3 = 1000, p_pwm4 = 1000;
@@ -78,7 +83,12 @@ Temp1: %T1%<br>
 Temp2: %T2%<br>
 Lat: %LAT%<br>
 Long: %LONG%<br>
+AltGPS: %ALTGPS%<br>
 Sat: %SAT%<br>
+TimeGPS: %TIMEGPS%<br>
+DateGPS: %DATEGPS%<br>
+GPSTS: %GPSTS%<br>
+GPSLOG: %GPSLOG%<br>
 
 <h3>PWM</h3>
 
@@ -156,9 +166,14 @@ PWM4 <input id="pwm4" value="%PWM4%">
     page.replace("%T1%", String(p_temp1));
     page.replace("%T2%", String(p_temp2));
 
-    page.replace("%LAT%", String(p_lat));
-    page.replace("%LONG%", String(p_long));
+    page.replace("%LAT%", String(p_lat,5));
+    page.replace("%LONG%", String(p_long,5));
     page.replace("%SAT%", String(p_satNum));
+    page.replace("%ALTGPS%", String(p_altgps));
+    page.replace("%GPSTS%", String(p_timestamp));
+    page.replace("%TIMEGPS%", String(p_timeGPS));
+    page.replace("%DATEGPS%", String(p_dateGPS));
+    page.replace("%GPSLOG%", String(p_logGPS));
 
     page.replace("%PWM1%", String(p_pwm1));
     page.replace("%PWM2%", String(p_pwm2));
@@ -185,7 +200,17 @@ void updateParams() {
     p_temp2 = gam.temperature2;
     p_lat = gps.lat;
     p_long = gps.lon;
+	p_altgps = gps.alt;
     p_satNum = gps.sats;
+	p_timeGPS = gps.time;
+	p_dateGPS = gps.date;
+    p_timestamp = gps.timestamp;
+    p_logGPS = "";
+    for(int i = 0; i < 10; i++) {
+		int j = (gps.logDataI + i) % 10;
+		//if (gps.logDataN[j] != "")
+        p_logGPS += gps.logDataN[j] + "<br>";
+	}
 
     p_pwm1 = PicoDronePWM_get(0);
     p_pwm2 = PicoDronePWM_get(1);
