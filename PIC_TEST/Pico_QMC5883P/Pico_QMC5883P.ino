@@ -8,6 +8,46 @@
 
 Adafruit_QMC5883P qmc;
 
+void scanWire ()
+{
+  byte error, address;
+  int nDevices;
+
+  Serial.println("Scanning...");
+
+  nDevices = 0;
+  for(address = 1; address < 127; address++ )
+  {
+    // The i2c_scanner uses the return value of
+    // the Write.endTransmisstion to see if
+    // a device did acknowledge to the address.
+    Wire.beginTransmission(address);
+    error = Wire.endTransmission();
+
+    if (error == 0)
+    {
+      Serial.print("I2C device found at address 0x");
+      if (address<16)
+        Serial.print("0");
+      Serial.print(address,HEX);
+      Serial.println("  !");
+
+      nDevices++;
+    }
+    else if (error==4)
+    {
+      Serial.print("Unknown error at address 0x");
+      if (address<16)
+        Serial.print("0");
+      Serial.println(address,HEX);
+    }
+  }
+  if (nDevices == 0)
+    Serial.println("No I2C devices found\n");
+  else
+    Serial.println("done\n");
+}
+
 void setup() {
   Serial.begin(115200);
   while (!Serial)
@@ -15,7 +55,12 @@ void setup() {
 
   Serial.println("QMC5883P Test");
 
-  if (!qmc.begin()) {
+    Wire.setSDA(20);
+    Wire.setSCL(21);
+    Wire.begin();
+    scanWire();
+
+  if (!qmc.begin(0x0D, &Wire)) {
     Serial.println("Failed to find QMC5883P chip");
     while (1)
       delay(10);
