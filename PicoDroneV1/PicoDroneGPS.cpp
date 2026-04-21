@@ -132,7 +132,7 @@ void PicoDroneGPS_update()
     while (Serial1.available())
     {
         String line = Serial1.readStringUntil('\n');
-	    Serial.println("GPS data: " + line);
+	    Serial.println(line);
 		logLast += line;
         if (line.startsWith("$GPGGA"))
         {
@@ -164,7 +164,7 @@ void PicoDroneGPS_update()
 		    gps.logDataI = gps.logDataI % 10;
             gps.logDataN[gps.logDataI++] = line;
 	    }
-        Serial.println("GPS log data: " + line);
+        //Serial.println("GPS log data: " + line);
     }
 }
 
