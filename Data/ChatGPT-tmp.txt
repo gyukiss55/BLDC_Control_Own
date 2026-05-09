@@ -1,0 +1,121 @@
+//----------------------- Wemos Lolin32 Lite BLDC control ---------//
+Arduino IDE, Wemos Lolin32 Lite project control BLDC
+ GPIO12 PWM output
+ GPIO14 BLDC AH enable
+ GPIO25 BLDC AL enable
+ GPIO32 BLDC BH enable
+ GPIO33 BLDC BL enable
+ GPIO26 BLDC CH enable
+ GPIO27 BLDC CL enable
+ Serial baudrate 115200
+ 
+ GPIO13 BLDC digital input of COMP1
+ GPIO15 BLDC digital input of COMP2
+ GPIO2 BLDC digital input of COMP3
+ 
+ External interrupt for both (rising, falling) COMP1, COMP2, COMP3
+ 
+ global parameters 
+ uint32_t pwmDuty = 0;
+ uint32_t bldcPeriod = 1000; // millisec  
+ uint32_t tsExtInt[32];
+ byte stateExtInt[32];
+ int extIntIndex = 0;
+  uint32_t extIntCounter = 0;
+   
+ PWM output period 1kHz, resolution 1024
+ 
+ use timer interrupt to control 6 state of BLDC by output  AH, AL, ..., CL using bldcPeriod
+
+exteranl interrupt function:
+{
+extIntCounter++;
+tsExtInt[extIntIndex] = micros();
+stateExtInt[extIntIndex] = GPIO13 ? 1 : 0 | GPIO15 ? 2 : 0 | GPIO2 ? 4 : 0
+extIntIndex = (extIntIndex + 1) % 32;
+}
+
+Serial input handle the next command format:
+p:<bldcPeriod in millisec>
+update bldcPeriod after next timer interrupt
+d:<pwmDuty>
+update pwmDuty after next timer interrupt
+loop in every second dump  millisec, pwmDuty, bldcPeriod 
+
+
+//----------------------- Wemos Lolin32 Signal ---------
+
+Arduino IDE, Wemos Lolin32 Lite project control analogue sign
+Query net global time
+refresh local time to i2c oled display D13-12864-I2C-BL 128 x 64
+format:
+yyyy.mm.dd
+hh.mm.ss
+GIO13,15 PWM output with the max frequency and 10 bit resolution
+GIO13 (sin (t/T1*2*Pi) + 1) * 500 where T1 = 1 milli second
+GIO13 (sin (t/T2*2*Pi) + 1) * 500 where T2 = 8/7 milli second
+get the sinus values from precalculated table
+ 
+loop in every second dump  millisec, pwmDuty, bldcPeriod 
+
+//----------------------- Wemos Lolin32 Lite BLDC control Web server ---------//
+wemos lolin32 lite, Arduino IDE
+Create a webserver
+sending html with the next controls
+Label - BLDC Web Service
+label - "BLDC Period" , edit control integer in range 100-10, 100 initial, named "period"
+label - "PWM duty" , edit control integer in range 0-50, 0 initial, named "duty"
+button - "Period +" increment "period" edit control in the predefined range
+button - "Period -" decrement "period" edit control in the predefined range
+button - "Duty +" increment "duty" edit control in the predefined range
+button - "Duty -" decrement "duty" edit control in the predefined range
+Whenever any edit control change send a Get command to the server with next format:
+/<endpoint>?period=<period>&duty=<duty>
+Receiving client Get command, the server update period and duty value if they are in the predefined range
+
+
+//----------------------- Wemos Lolin32 Lite BLDC control esc 30A with pwm ---------//
+
+ Arduino IDE, Wemos Lolin32 Lite, BLDC control, ESC 30A with pwm, RD 2205 BLDC motor, 5045 propeller, 3S LiPo battery, 30A ESC, 12V power supply
+ I need to control BLDC motor with ESC 30A using Wemos Lolin32 Lite and Arduino IDE.
+ which kind of hardwer do I need more?
+ Generate the next modules:
+ 1. BLDCPWMNet: a web server module to control BLDC motor speed and receiving Get command with next format: /<endpoint>?period=<period>&duty=<duty>
+ 2. BLDCPWMControl: a module to control BLDC motor speed by outputting PWM signal to ESC 30A, receiving period and duty value from BLDCPWMNet module
+ 3. BLDCExternalInterrupt: a module to handle external interrupts from BLDC motor sensors, counting the number of interrupts and measuring the time between them to calculate the motor speed and direction
+ 4. BLDCOledDisplay: a module to display the current motor speed and direction on an OLED display, receiving data from BLDCExternalInterrupt module begining:
+ #include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+
+const int sdaPin = 19; // SDA pin
+const int sclPin = 22; // SCL pin
+
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 64
+
+//----------------------- RPI Pico 2W BLDC control esc 30A with pwm ---------//
+
+ Arduino IDE, RPI Pico 2W, BLDC control, ESC 30A with pwm, RD 2205 BLDC motor, 5045 propeller, 3S LiPo battery, 30A ESC, 12V power supply
+ I need to control BLDC motor with ESC 30A using RPI Pico 2W and Arduino IDE.
+ which kind of hardwer do I need more?
+ Generate the next modules:
+ 1. BLDCPWMNet: a web server module to control BLDC motor speed and send a web page to client with the next controls:
+Label - BLDC Web Service
+Label - "HALL counter:<hallCounter>" counter/minute:<hallCounterPerMin>" (hallCounter, and hallCounterPerMin are global integer in Pico)
+label - "BLDC speed:" , edit control integer in range 6553-13107 and 6553 initial value, named "speed"
+label - "BLDC speed 1:" , edit control integer in range 6553-8518, 6553 initial, named "speed1"
+button - "Speed +" increment "speed" edit control in the predefined range
+button - "Speed -" decrement "speed" edit control in the predefined range
+button - "Speed +10" +=10 "speed" edit control in the predefined range
+button - "Speed -10" -=10 "speed" edit control in the predefined range
+button - "Reset" set 6553 "speed" edit control 
+button - "Speed 1" set "speed" edit control = "speed1" edit control 
+Whenever any edit control "speed" change send a Get command to the server with next format:
+/<endpoint>?Speed=<speed>
+ 2. BLDCPWMControl: a module to control BLDC motor speed by outputting PWM signal to GP15 to ESC 30A, receiving speed value from BLDCPWMNet module
+ 3. BLDCExternalInterrupt: a module to handle external interrupts from BLDC motor sensors, counting the number of interrupts "int hallCounter" and measuring the rotation "int hallCounterPerMin" of bldc motoz on GP13
+ 4. BLDCSerial: module sends current status of "speed", "hallCounter", "hallCounterPerMin" in every second.
+
+/****************************** ESP-IDF ESP32-S3 BT HID HOST ********************/
+Use ESP-IDF v6.0 examples esp_hid_host and change the source to find the BOSI-GTX590 GamePad wich BT name is 'Trust-GMP-04' 
+and  read the data and dump it UART continously
