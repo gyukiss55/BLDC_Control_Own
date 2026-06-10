@@ -19,7 +19,8 @@ void setup() {
   Serial.begin(115200);
   delay(2000);
   Serial.println("Starting the I2C interface.");
-  Wire.setPins(19, 22); // SDA, SCL
+ // Wire.setPins(19, 22); // SDA, SCL
+  Wire.setPins(8, 9); // SDA, SCL
   Wire.begin();
   scanWire();
   compassPtr = new QMC5883LCompass();
