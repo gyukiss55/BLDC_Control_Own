@@ -24,30 +24,29 @@ void handleRoot() {
     html += "BLDC speed: " + String(speed) + "<br>";
     html += "BLDC speed1: " + String(speed1) + "<br><br>";
 
-    html += "<a href='/set?Speed=" + String(speed + 1) + "'>Speed +</a>";
+    html += "<a href='/set?Speed=" + String(speed + 1) + "'>Speed +</a>        ";
     html += "<a href='/set?Speed=" + String(speed - 1) + "'>Speed -</a><br>";
-    html += "<a href='/set?Speed=" + String(speed + 10) + "'>Speed +10</a>";
+    html += "<a href='/set?Speed=" + String(speed + 10) + "'>Speed +10</a>        ";
     html += "<a href='/set?Speed=" + String(speed - 10) + "'>Speed -10</a><br>";
-    html += "<a href='/set?Speed=" + String(speed + 100) + "'>Speed +100</a>";
+    html += "<a href='/set?Speed=" + String(speed + 100) + "'>Speed +100</a>        ";
     html += "<a href='/set?Speed=" + String(speed - 100) + "'>Speed -100</a><br>";
-    html += "<a href='/set?Speed=" + String(speed + 1000) + "'>Speed +1000</a>";
+    html += "<a href='/set?Speed=" + String(speed + 1000) + "'>Speed +1000</a>        ";
     html += "<a href='/set?Speed=" + String(speed - 1000) + "'>Speed -1000</a><br>";
     html += "<a href='/set?Speed=6553'>Reset</a><br>";
     html += "<a href='/set?Speed=" + String(speed1) + "'>Speed1</a><br>";
 
     html += R"rawliteral(<input type = "range" min = "6553" max = "13107" value = "6553" id = "throttle" oninput = "update(this.value)">
-        <p>Throttle: < span id = "value">)rawliteral";
+        <p>Throttle: <span id="value">)rawliteral";
     html += String(speed);
-    html += R"rawliteral(< / span > netudmi< / p>
-
-        <script>
+    html += R"rawliteral(</span> netudmi</p>
+    <script>
         function update(val) {
         document.getElementById("value").innerText = val;
 
-        fetch(`/set?Speed=${ val }`)
+        fetch(`/set?Speed=${val}`)
             .catch (err = > console.error(err));
-    }
-    < / script>
+        }
+    </script>
     )rawliteral";
 
     html += "</body></html>";

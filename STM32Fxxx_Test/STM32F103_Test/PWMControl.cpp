@@ -4,7 +4,7 @@
 #include "PWMControl.h"
 
 uint32_t pwmValue[4] = {1000, 1000, 1000, 1000};
-char* pattern[] = { "P1=", "P2=", "P3=", "P4=" };
+char* pattern[] = { "1/", "2/", "3/", "4/" };
 
 void setupPWM() {
 	analogWriteFrequency(10);      // 10 Hz = 100 ms period
@@ -27,7 +27,7 @@ void loopPWM() {
 				Serial.println(input);
 
 				int value = input.toInt();
-				if (value >= 0 && value <= 1000) {
+				if (value >= 0 && value <= 10000) {
 					pwmValue[i] = value + 1000; // Update the PWM value for the corresponding pin
 					indeces.push_back(i);
 

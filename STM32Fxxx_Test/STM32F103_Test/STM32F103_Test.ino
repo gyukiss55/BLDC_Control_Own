@@ -70,7 +70,8 @@ void loopQueryIMU() {
 	currentTime = millis() - currentTime;
 	msg = "Query Time (ms): " + String(currentTime) + " ms\n";
 	msgList.push_back(msg);
+	
 	for (const auto& m : msgList) {
-		//Serial.print(m);
+		Serial.print(m);
 	}
 }

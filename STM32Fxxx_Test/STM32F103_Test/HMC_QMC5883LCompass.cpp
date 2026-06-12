@@ -127,5 +127,5 @@ void dumpQMC5883LCompass(String& message) {
 	int y = compass.getY();
 	int z = compass.getZ();
 	byte a = compass.getAzimuth();
-	message = "Comp:" + String(x) + "," + String(y) + "," + String(z) + ", Azimuth:" + String(a);
+	message = "\nComp:" + String(x) + "," + String(y) + "," + String(z) + ", Azimuth:" + String(a);
 }
