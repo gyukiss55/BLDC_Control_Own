@@ -6,8 +6,10 @@
 const char * ssid = "RTAX999";
 const char * password = "LiDoDa#959285$";
 
-IPAddress serverIP (192,168,50,154);
-int port = 1051;
+//IPAddress serverIP (192,168,50,154);
+//int port = 1051;
+IPAddress serverIP (192,168,50,159);
+int port = 2457;
 
 AsyncUDP udp;
 
@@ -32,6 +34,7 @@ void setup() {
   if (udp.connect(serverIP, port)) {
     Serial.println("UDP connected");
     msg = WiFi.localIP().toString();
+    Serial.println(msg);
 
     morseLed.execute(msg);
 
@@ -50,6 +53,8 @@ void setup() {
       msg += packet.localIP().toString();
       msg += ":";
       msg += packet.localPort();
+      msg += ", ms: ";
+      msg += String (millis());
       msg += ", Length: ";
       msg += packet.length();
       msg += ", Data: ";
@@ -68,6 +73,7 @@ void setup() {
       //reply to the client
       packet.printf("Got %lu bytes of data", (unsigned long)packet.length());
       msg += "\n Got " + String (packet.length()) + " bytes of data\n";
+      packet.print(msg);
     });
     //Send unicast
     udp.print(msg);

@@ -137,3 +137,6 @@ generate WebServer and handle next command (optional if aall the 4 is given):
  ?p<PWM channel>=<PWM pulse in micro sec in range 1000-2000>,p<PWM channel>=<PWM pulse in micro sec in range 1000-2000>,p<PWM channel>=<PWM pulse in micro sec in range 1000-2000>,p<PWM channel>=<PWM pulse in micro sec in range 1000-2000>
 5. PicoDroneSerial.c
 Dump current status of PWM, MPU-6500M, BMP-280, GY-NE06MV2, in every second.
+
+///////////--ATmega328-BLDC--////////////////////
+AR-RF-NANO, Arduino IDE, Hello word code on Serial w baudrate 1152000
