@@ -99,5 +99,4 @@ void PicoQMC5883L_DumpDirection() {
 	Serial.print(myArray[1]);
 	Serial.print(myArray[2]);
 	Serial.println();
-	Serial.println();
 }
