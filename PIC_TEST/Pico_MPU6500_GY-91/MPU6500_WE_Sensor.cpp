@@ -177,8 +177,6 @@ void loopMPU6500_WESensor() {
 	Serial.print("Temperature in °C: ");
 	Serial.println(temp);
 
-	Serial.println("********************************************");
-
 }
 
 
