@@ -11,13 +11,14 @@ void setup() {
 		//delay(10);
 	delay(2000);
 
+	Serial.println("setup uart1");
 	setupUART9600();
 
 	delay(2000);
 	Serial.println("MPU6500 GY-91 Scan I2C Bus started");
 
 	while (Serial.available() == 0) {
-		setupWire(4,5);
+		setupWire(5,4);
 		scanWire();
 		endWire();
 		//delay(1000);
