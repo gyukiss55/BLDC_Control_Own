@@ -71,13 +71,17 @@ void setup() {
     while (!Serial)
         delay(10);
 
+    delay(2000);
     Serial.println("MPU9250 Magnetometer Data Example");
 
-    Wire.setSDA(20);
-    Wire.setSCL(21);
+    //Wire.setSDA(20);
+    //Wire.setSCL(21);
     Wire.begin();
 
-    scanWire ();
+    scanWire();
+
+    Wire.end();
+    delay(2000);
 
     myMPU9250Ptr = new MPU9250_WE(&Wire, MPU9250_ADDR);
 

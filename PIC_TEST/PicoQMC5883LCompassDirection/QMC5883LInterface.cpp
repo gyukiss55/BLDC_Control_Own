@@ -19,9 +19,6 @@ Release under the GNU General Public License v3
 QMC5883LCompass compass;
 
 void PicoQMC5883L_Init() {
-	Wire.setSDA(20);
-	Wire.setSCL(21);
-	Wire.begin();
 	compass.setADDR(0x0D);
 	compass.init();
 }
