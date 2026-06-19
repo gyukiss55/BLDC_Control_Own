@@ -1,0 +1,57 @@
+// WireCustom.cpp
+#include <Arduino.h>
+#include <Wire.h>
+#include "WireCustom.h"
+
+void setupWire(int SDA_PIN, int SCL_PIN) {
+	if (SDA_PIN == 0 && SCL_PIN == 0) {
+		// Use default pins for I2C
+		Wire.begin();
+		return;
+	}
+	Wire.setSDA(SDA_PIN);
+	Wire.setSCL(SCL_PIN);
+//	Wire.setPins(SDA_PIN, SCL_PIN);
+	Wire.begin();
+}
+
+void endWire() {
+	//	Wire.setPins(SDA_PIN, SCL_PIN);
+	Wire.end();
+}
+
+void scanWire()
+{
+	byte error, address;
+	int nDevices;
+	Serial.println("Scanning...");
+	nDevices = 0;
+	for (address = 1; address < 127; address++)
+	{
+		// The i2c_scanner uses the return value of
+		// the Write.endTransmisstion to see if
+		// a device did acknowledge to the address.
+		Wire.beginTransmission(address);
+		error = Wire.endTransmission();
+		if (error == 0)
+		{
+			Serial.print("I2C device found at address 0x");
+			if (address < 16)
+				Serial.print("0");
+			Serial.print(address, HEX);
+			Serial.println("  !");
+			nDevices++;
+		}
+		else if (error == 4)
+		{
+			Serial.print("Unknown error at address 0x");
+			if (address < 16)
+				Serial.print("0");
+			Serial.println(address, HEX);
+		}
+	}
+	if (nDevices == 0)
+		Serial.println("No I2C devices found\n");
+	else
+		Serial.println("done\n");
+}

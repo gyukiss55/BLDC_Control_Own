@@ -2,7 +2,6 @@
 #include <Arduino.h>
 #include "UART9600.h"
 
-
 char uart2_buffer[512];
 
 String lastMsg;

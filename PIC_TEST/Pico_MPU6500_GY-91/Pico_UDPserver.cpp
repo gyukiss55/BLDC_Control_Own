@@ -1,4 +1,4 @@
-// Pico2W_UDPserver.cpp
+// Pico_UDPserver.cpp
 /*
   UDPSendReceive.pde:
   This sketch receives UDP message strings, prints them to the serial port
@@ -39,6 +39,7 @@ String packetStr = "";
 
 void setupUDPServer() {
     Serial.begin(115200);
+    WiFi.end();
     WiFi.begin(STASSID, STAPSK);
     while (WiFi.status() != WL_CONNECTED) {
         Serial.print('.');
@@ -85,6 +86,7 @@ void loopUDPClient(unsigned int udpPort) {
 
 void sendUDPMessage(const String& message) {
     packetStr = message;
+    loopUDPClient(8888);
 }
 
 /*

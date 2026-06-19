@@ -17,6 +17,9 @@
 #include <Arduino.h>
 #include <MPU6500_WE.h>
 #include <Wire.h>
+
+#include "jsonDump.h"
+
 #define MPU6500_ADDR 0x68
 
 /* There are several ways to create your MPU6500 object:
@@ -190,3 +193,14 @@ bool readMPU6500_WESensor(xyzFloat& gValue, xyzFloat& gyr, float& temp, float& r
 	return true;
 }
 
+void jsonDumpMPU6500_WESensor(String& jsonStr)
+{
+	xyzFloat gValue, gyr;
+	float temp, resultantG;
+	readMPU6500_WESensor(gValue, gyr, temp, resultantG);
+
+	jsonDump("acc", gValue.x, gValue.y, gValue.z, jsonStr);
+	jsonDump("gyr", gyr.x, gyr.y, gyr.z, jsonStr);
+	jsonDump("resG", resultantG, jsonStr);
+	jsonDump("temp", temp, jsonStr);
+}

@@ -2,7 +2,7 @@
 #include <Arduino.h>
 #include "UART9600.h"
 
-
+char uart1_buffer[512];
 char uart2_buffer[512];
 
 String lastMsg;
@@ -37,13 +37,13 @@ void setupUART9600() {
 
 void loopUART9600() {
 	if (Serial.available()) {
-		String receivedData1 = Serial.readStringUntil('\n');
+		String receivedData1 = Serial2.readStringUntil('\n');
 		Serial.println(receivedData1);
 	}
 	if (Serial2.available()) {
 		size_t num = Serial2.readBytes(uart2_buffer, sizeof(uart2_buffer) - 1);
 		uart2_buffer[num] = '\0';
-		Serial2.println(uart2_buffer);
+		Serial.println(uart2_buffer);
 		lastTS = millis();
 		lastMsg = uart2_buffer;
 	}
@@ -51,6 +51,6 @@ void loopUART9600() {
 
 unsigned long getLastUART2Msg (String& str)
 {
-	str = String (lastTS) + "+" + lastMsg;
+	str = String (lastTS) + lastMsg;
 	return lastTS;
 }
