@@ -28,6 +28,7 @@ void setup() {
 		delay(1000);
 	//}
     endWire();
+
 	Serial.println("MPU6500 GY-91 Scan I2C Bus completed");
 	delay(2000);
 
