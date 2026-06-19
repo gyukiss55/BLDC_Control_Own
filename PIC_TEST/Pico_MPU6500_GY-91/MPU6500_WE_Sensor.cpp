@@ -158,23 +158,23 @@ void loopMPU6500_WESensor() {
 	float temp = myMPU6500.getTemperature();
 	float resultantG = myMPU6500.getResultantG(gValue);
 
-	Serial.println("Acceleration in g (x,y,z):");
+	Serial.println("Acce:");
 	Serial.print(gValue.x);
-	Serial.print("   ");
+	Serial.print(",");
 	Serial.print(gValue.y);
-	Serial.print("   ");
-	Serial.println(gValue.z);
-	Serial.print("Resultant g: ");
+	Serial.print(",");
+	Serial.print(gValue.z);
+	Serial.print(", g: ");
 	Serial.println(resultantG);
 
-	Serial.println("Gyroscope data in degrees/s: ");
+	Serial.println("Gyro (degr/s):");
 	Serial.print(gyr.x);
-	Serial.print("   ");
+	Serial.print(",");
 	Serial.print(gyr.y);
-	Serial.print("   ");
+	Serial.print(",");
 	Serial.println(gyr.z);
 
-	Serial.print("Temperature in °C: ");
+	Serial.print("Temp:");
 	Serial.println(temp);
 
 }

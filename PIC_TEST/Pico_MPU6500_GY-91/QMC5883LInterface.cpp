@@ -90,7 +90,7 @@ void PicoQMC5883L_DumpDirection() {
 	Serial.print("  B: ");
 	Serial.print(b);
 
-	Serial.println();
+	Serial.print("  D: ");
 
 	char myArray[3];
 	compass.getDirection(myArray, a);
