@@ -3,7 +3,6 @@
 #include "UART9600.h"
 
 
-char uart2_buffer[512];
 
 String lastMsg;
 unsigned long lastTS = 0;
@@ -40,12 +39,19 @@ void loopUART9600() {
 		String receivedData1 = Serial.readStringUntil('\n');
 		Serial.println(receivedData1);
 	}
-	if (Serial2.available()) {
-		size_t num = Serial2.readBytes(uart2_buffer, sizeof(uart2_buffer) - 1);
-		uart2_buffer[num] = '\0';
-		Serial2.println(uart2_buffer);
+	String receivedData2All;
+	while (Serial2.available()) {
+		String receivedData2 = Serial2.readStringUntil('\n');
+		Serial.print(receivedData2);
+		if (receivedData2.startsWith("$GPRMC") ||
+			receivedData2.startsWith("$GPGGA") ||
+			receivedData2.startsWith("$GPGSA") ||
+			receivedData2.startsWith("$GPGSV"))
+			receivedData2All += receivedData2;
+	}
+	if (receivedData2All.length() > 0) {
 		lastTS = millis();
-		lastMsg = uart2_buffer;
+		lastMsg = receivedData2All;
 	}
 }
 

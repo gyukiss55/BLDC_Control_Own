@@ -48,14 +48,16 @@ class Program
                 {
                     byte[] data = udpServer.Receive(ref remoteEP);
 
-                    Console.WriteLine(
-                        $"\n[{DateTime.Now:HH:mm:ss}] Packet from {remoteEP.Address}:{remoteEP.Port}");
-                    Console.WriteLine($"Length: {data.Length} bytes");
+                    //Console.WriteLine(
+                    //    $"\n[{DateTime.Now:HH:mm:ss}] Packet from {remoteEP.Address}:{remoteEP.Port}");
+                    //Console.WriteLine($"Length: {data.Length} bytes");
 
 
                     // ASCII/UTF8 dump
                     string text = Encoding.UTF8.GetString(data);
-                    Console.WriteLine($"TEXT: {text}");
+                    if (text.IndexOf('\n') < 0)
+                        text += "\n";
+                    Console.Write(text);
                 }
                 catch (Exception ex)
                 {
