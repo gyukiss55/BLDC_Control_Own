@@ -16,6 +16,9 @@ Release under the GNU General Public License v3
 #include <Arduino.h>
 #include <QMC5883LCompass.h>
 
+#include "jsonDump.h"
+
+
 QMC5883LCompass compass;
 
 void PicoQMC5883L_Init() {
@@ -99,4 +102,30 @@ void PicoQMC5883L_DumpDirection() {
 	Serial.print(myArray[1]);
 	Serial.print(myArray[2]);
 	Serial.println();
+}
+
+void jsonDumpQMC5883L(String& jsonStr) {
+	int x, y, z;
+	compass.read();
+	x = compass.getX();
+	y = compass.getY();
+	z = compass.getZ();
+
+	jsonDump("comp", x, y, z, jsonStr);
+
+	byte a = compass.getAzimuth();
+	byte b = compass.getBearing(a);
+
+	jsonDump("azi", a, jsonStr);
+	jsonDump("bea", b, jsonStr);
+
+	char myArray[4];
+	myArray[3] = '\0'; // Null-terminate the string
+	compass.getDirection(myArray, a);
+	String directionStr;
+	directionStr += myArray[0];
+	directionStr += myArray[1];
+	directionStr += myArray[2];
+
+	jsonDump("dir", directionStr.c_str(), jsonStr);
 }

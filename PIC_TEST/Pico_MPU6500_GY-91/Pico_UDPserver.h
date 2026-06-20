@@ -1,4 +1,4 @@
-// Pico2W_UDPserver.h
+// Pico_UDPserver.h
 void setupUDPServer();
 void loopUDPServer();
 void setupUDPClient();

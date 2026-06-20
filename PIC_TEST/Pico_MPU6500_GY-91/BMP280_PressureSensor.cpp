@@ -4,6 +4,7 @@
 #include <Wire.h>
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BMP280.h>
+#include "jsonDump.h"
 
 static Adafruit_BMP280* bmpPtr = nullptr;
 
@@ -45,4 +46,11 @@ void loopBMP280PressureSensor() {
 	Serial.print(altitude);
 	Serial.println(" m");
 
+}
+
+void jsonDumpBMP280PressureSensor(String& jsonStr) {
+	float pressure = bmpPtr->readPressure() / 100.0; // hPa
+	float altitude = bmpPtr->readAltitude(1013.25);
+	jsonDump("Pre", pressure, jsonStr);
+	jsonDump("Alt", altitude, jsonStr);
 }
