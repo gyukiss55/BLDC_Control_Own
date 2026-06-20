@@ -20,12 +20,17 @@
 #include <WiFiUdp.h>
 
 #ifndef STASSID
-#define STASSID "ASUS_98_2G"
-#define STAPSK "LiDoDa#959285$"
+//#define STASSID "ASUS_98_2G"
+//#define STASSID "RTAX999"
+//#define STAPSK "LiDoDa#959285$"
+#define STASSID "HUAWEI P30"
+#define STAPSK "6381bf07b666"
 #endif
 
-IPAddress ipBradcast(192, 168, 50, 255);
-IPAddress ipServer(192,168,50,180);
+IPAddress ipBradcast(192, 168, 1, 255);
+//IPAddress ipServer(192,168,50,180);
+//IPAddress ipServer(192,168,50,154);
+IPAddress ipServer(192,168,43,1);
 
 unsigned int localPort = 8888;  // local port to listen on
 
@@ -77,7 +82,7 @@ void loopUDPClient(unsigned int udpPort) {
     if (packetStr.length() > 0) {
 
         // send a reply, to the IP address and port that sent us the packet we received
-        Udp.beginPacket(ipBradcast, udpPort);
+        Udp.beginPacket(ipServer, udpPort);
         Udp.write(packetStr.c_str());
         Udp.endPacket();
 		packetStr = "";
